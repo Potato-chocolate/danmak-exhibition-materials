@@ -886,7 +886,7 @@
                                 <td id="staff_salary_percent">-</td>
                             </tr>
                             <tr>
-                                <td>4대보험<span class="detail-sublabel">직원급여의 8%</span></td>
+                                <td>4대보험<span class="detail-sublabel" id="ratio_insurance4">직원급여의 8%</span></td>
                                 <td id="insurance4_display">-</td>
                                 <td id="insurance4_percent">-</td>
                             </tr>
@@ -917,22 +917,22 @@
                             <tr>
                                 <td>주육류</td>
                                 <td id="food_main">-</td>
-                                <td>15.0%</td>
+                                <td id="ratio_food_main">15.0%</td>
                             </tr>
                             <tr>
                                 <td>소스류</td>
                                 <td id="food_sauce">-</td>
-                                <td>3.3%</td>
+                                <td id="ratio_food_sauce">3.3%</td>
                             </tr>
                             <tr>
                                 <td>부육류</td>
                                 <td id="food_sub_meat">-</td>
-                                <td>3.3%</td>
+                                <td id="ratio_food_sub_meat">3.3%</td>
                             </tr>
                             <tr>
                                 <td>농산물</td>
                                 <td id="food_produce">-</td>
-                                <td>6.4%</td>
+                                <td id="ratio_food_produce">6.4%</td>
                             </tr>
                         </table>
                     </div>
@@ -956,17 +956,17 @@
                             <tr>
                                 <td>일반주류</td>
                                 <td id="beverage_regular">-</td>
-                                <td>3.7%</td>
+                                <td id="ratio_beverage_regular">3.7%</td>
                             </tr>
                             <tr>
                                 <td>전통주/고급주류</td>
                                 <td id="beverage_premium">-</td>
-                                <td>0.7%</td>
+                                <td id="ratio_beverage_premium">0.7%</td>
                             </tr>
                             <tr>
                                 <td>음료(소프트드링크)</td>
                                 <td id="beverage_soft">-</td>
-                                <td>0.6%</td>
+                                <td id="ratio_beverage_soft">0.6%</td>
                             </tr>
                         </table>
                     </div>
@@ -990,17 +990,17 @@
                             <tr>
                                 <td>전기요금</td>
                                 <td id="utility_electric">-</td>
-                                <td>1.0%</td>
+                                <td id="ratio_utility_electric">1.0%</td>
                             </tr>
                             <tr>
                                 <td>가스요금</td>
                                 <td id="utility_gas">-</td>
-                                <td>0.5%</td>
+                                <td id="ratio_utility_gas">0.5%</td>
                             </tr>
                             <tr>
                                 <td>수도요금</td>
                                 <td id="utility_water">-</td>
-                                <td>0.3%</td>
+                                <td id="ratio_utility_water">0.3%</td>
                             </tr>
                         </table>
                     </div>
@@ -1024,17 +1024,17 @@
                             <tr>
                                 <td>숯</td>
                                 <td id="material_charcoal">-</td>
-                                <td>1.0%</td>
+                                <td id="ratio_material_charcoal">1.0%</td>
                             </tr>
                             <tr>
                                 <td>불판코팅</td>
                                 <td id="material_coating">-</td>
-                                <td>0.5%</td>
+                                <td id="ratio_material_coating">0.5%</td>
                             </tr>
                             <tr>
                                 <td>소모품</td>
                                 <td id="material_supplies">-</td>
-                                <td>0.5%</td>
+                                <td id="ratio_material_supplies">0.5%</td>
                             </tr>
                         </table>
                     </div>
@@ -1063,12 +1063,12 @@
                             <tr>
                                 <td>로열티</td>
                                 <td id="misc_royalty">-</td>
-                                <td>2.2%</td>
+                                <td id="ratio_royalty">2.2%</td>
                             </tr>
                             <tr>
                                 <td>홍보비</td>
                                 <td id="misc_advertising">-</td>
-                                <td>2.0%</td>
+                                <td id="ratio_advertising">2.0%</td>
                             </tr>
                             <tr>
                                 <td>복리후생비</td>
@@ -1155,10 +1155,13 @@
          * 테이블오더기 대수 = 테이블 수 + 1 (카운터용)
          */
         function getPosCost(area) {
+            // 엑셀 BEP 기준 직접 매핑이 있으면 사용
+            if (CONFIG.posCostByArea && CONFIG.posCostByArea[area]) {
+                return CONFIG.posCostByArea[area];
+            }
+            // 없으면 기존 공식으로 계산
             const tables = CONFIG.tablesByArea[area];
-            return Math.round(
-                ((CONFIG.포스_테이블당 * (tables + 1)) + CONFIG.포스_메인) * CONFIG.포스_부가세율
-            );
+            return Math.round(((CONFIG.포스_테이블당 * (tables + 1)) + CONFIG.포스_메인) * CONFIG.포스_부가세율);
         }
 
         /**
@@ -1317,7 +1320,7 @@
 
             // 카드수수료: 연매출 10억 기준 차등 적용
             const annualSales  = monthlySales * 12;
-            const cardFeeRate  = annualSales >= 1000000000 ? CONFIG.cardFeeOver10억 : CONFIG.cardFeeUnder10억;
+            const cardFeeRate  = annualSales >= CONFIG.카드수수료_경계연매출 ? CONFIG.cardFeeOver10억 : CONFIG.cardFeeUnder10억;
             const cardFee      = Math.round(monthlySales * CONFIG.cardRatio * cardFeeRate);
             const royalty      = Math.round(monthlySales * cr.로열티);
             const advertising  = Math.round(monthlySales * cr.홍보비);
@@ -1391,7 +1394,7 @@
             document.getElementById('material_supplies').textContent      = fmt(Math.round(monthlySales * cr.소모품));
 
             // 기타비용
-            const cardFeeRateLabel = annualSales >= 1000000000 ? '1.4%' : '1.1%';
+            const cardFeeRateLabel = annualSales >= CONFIG.카드수수료_경계연매출 ? '1.4%' : '1.1%';
             document.getElementById('misc_costs_amount').textContent  = fmt(miscCosts);
             document.getElementById('misc_costs_percent').textContent = '(' + pct(miscCosts, monthlySales) + ')';
             document.getElementById('card_fee_sublabel').textContent  = '카드매출(' + Math.round(CONFIG.cardRatio * 100) + '%) x ' + cardFeeRateLabel;
@@ -1400,6 +1403,26 @@
             document.getElementById('misc_royalty').textContent       = fmt(royalty);
             document.getElementById('misc_advertising').textContent   = fmt(advertising);
             document.getElementById('misc_welfare').textContent       = fmt(welfare);
+
+            // 비율 라벨 동적 업데이트 (CONFIG 기준)
+            const toP = r => (r * 100).toFixed(1) + '%';
+            const setEl = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
+            setEl('ratio_food_main',          toP(cr.식재료_주육류));
+            setEl('ratio_food_sauce',         toP(cr.식재료_소스));
+            setEl('ratio_food_sub_meat',      toP(cr.식재료_부육류));
+            setEl('ratio_food_produce',       toP(cr.식재료_농산물));
+            setEl('ratio_beverage_regular',   toP(cr.주류_일반));
+            setEl('ratio_beverage_premium',   toP(cr.주류_고급));
+            setEl('ratio_beverage_soft',      toP(cr.주류_음료));
+            setEl('ratio_utility_electric',   toP(cr.전기));
+            setEl('ratio_utility_gas',        toP(cr.가스));
+            setEl('ratio_utility_water',      toP(cr.수도));
+            setEl('ratio_material_charcoal',  toP(cr.숯));
+            setEl('ratio_material_coating',   toP(cr.불판코팅));
+            setEl('ratio_material_supplies',  toP(cr.소모품));
+            setEl('ratio_royalty',            toP(cr.로열티));
+            setEl('ratio_advertising',        toP(cr.홍보비));
+            setEl('ratio_insurance4',         '직원급여의 ' + toP(CONFIG.insuranceRate));
         }
 
         /**

@@ -1,0 +1,7 @@
+{
+  "tool_name": "Read",
+  "tool_input_preview": "{\"file_path\":\"C:\\\\Users\\\\PC\\\\OneDrive\\\\바탕화면\\\\CGF파일\\\\6. 단막\\\\예상 개설비용 및 BEP\\\\단막 가맹 매출 및 개설비용 모의계산\\\\v2\\\\단막 매출 시뮬레이션 v2.html\"}",
+  "error": "File content (17490 tokens) exceeds maximum allowed tokens (10000). Use offset and limit parameters to read specific portions of the file, or search for specific content instead of reading the whole file.",
+  "timestamp": "2026-03-23T06:35:21.254Z",
+  "retry_count": 1
+}

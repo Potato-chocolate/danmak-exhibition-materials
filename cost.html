@@ -488,12 +488,12 @@
             <div class="info-item">
                 <span class="info-label">상권 유형</span>
                 <select class="info-select" id="business_type" onchange="updateStoreInfo()">
-                    <option value="오피스" data-rotation="2.5">오피스</option>
-                    <option value="주거" data-rotation="2.5">주거</option>
-                    <option value="먹자" data-rotation="3">먹자골목</option>
-                    <option value="대학생" data-rotation="3.5">대학가</option>
-                    <option value="복합" data-rotation="3" selected>복합상권</option>
-                    <option value="데이트" data-rotation="3.5">데이트</option>
+                    <option value="오피스">오피스</option>
+                    <option value="주거">주거</option>
+                    <option value="먹자">먹자골목</option>
+                    <option value="대학생">대학가</option>
+                    <option value="복합" selected>복합상권</option>
+                    <option value="데이트">데이트</option>
                 </select>
             </div>
             <div class="info-item">
@@ -828,7 +828,7 @@
                                     </div>
                                     <div class="radio-item">
                                         <input type="radio" name="grill_type" id="grill_electric" value="electric" onchange="calculateGrillSelection()">
-                                        <label for="grill_electric">착화식로스터 210,000원</label>
+                                        <label for="grill_electric">착화식로스터 209,000원</label>
                                     </div>
                                 </div>
                             </td>
@@ -1284,12 +1284,12 @@
             document.getElementById('grill_qty').dataset.price = grillPrice;
             document.getElementById('grill_total').textContent = fmt(grillPrice * tables);
 
-            // 6. 불판 수량: 테이블 수 × 3
-            document.getElementById('grill_plate_qty').value = tables * 3;
-            document.getElementById('total_plate').textContent = fmt(CONFIG.불판 * tables * 3);
+            // 6. 불판 수량: 테이블 수 × 불판배수
+            document.getElementById('grill_plate_qty').value = tables * CONFIG.불판배수;
+            document.getElementById('total_plate').textContent = fmt(CONFIG.불판 * tables * CONFIG.불판배수);
 
             // 7. 착화기 수량: 35평 이하 1대, 40평 이상 2대
-            const igniterQty = area <= 35 ? 1 : 2;
+            const igniterQty = area <= CONFIG.착화기_경계평수 ? 1 : 2;
             document.getElementById('igniter_qty').value = igniterQty;
             document.getElementById('igniter_total').textContent = fmt(CONFIG.착화기 * igniterQty);
 
@@ -1503,7 +1503,7 @@
             const t4 = parseInt(document.getElementById('table_4_qty').value) || 0;
             const t6 = parseInt(document.getElementById('table_6_qty').value) || 0;
             const booth = parseInt(document.getElementById('booth_seat_qty').value) || 0;
-            const chairQty = Math.max(0, (t4 * 4) + (t6 * 6) - booth);
+            const chairQty = Math.max(0, (t4 * CONFIG.좌석수_4인) + (t6 * CONFIG.좌석수_6인) - booth);
             document.getElementById('chair_qty').value = chairQty;
             document.getElementById('total_chair').textContent = fmt(CONFIG.의자 * chairQty);
             document.getElementById('total_chair').style.color = chairQty === 0 ? 'var(--text-light)' : '';
@@ -1561,7 +1561,7 @@
                 document.getElementById('igniter_total').style.color = 'var(--text-light)';
             } else {
                 // 테이블화로형: 착화기 필요 (평수별 수량)
-                const igniterQty = area <= 35 ? 1 : 2;
+                const igniterQty = area <= CONFIG.착화기_경계평수 ? 1 : 2;
                 igniterEl.disabled = false;
                 igniterEl.value = igniterQty;
                 const igniterTotal = CONFIG.착화기 * igniterQty;
@@ -1597,8 +1597,8 @@
 
         // 체크박스별 고정 금액 정의 (수량 입력 없는 고정 항목)
         const EXTRA_FIXED = {
-            '에어컨시공':   3000000,    // 시공비(600,000 × 3) + 배관비(40,000 × 30) 합산
-            '음향':         900000,     // 스피커(100,000 × 4) + 엠프(200,000) + 시공비(300,000)
+            '에어컨시공':   (CONFIG.에어컨_시공비 * CONFIG.에어컨_기본대수) + (CONFIG.에어컨_배관비 * CONFIG.배관_기본m),
+            '음향':         (CONFIG.스피커 * CONFIG.스피커_기본대수) + CONFIG.엠프 + CONFIG.음향시공비,
             '디자인물':     CONFIG.디자인물,
             '주방신설':     CONFIG.주방신설,
             '도시가스':     CONFIG.도시가스,
@@ -1766,8 +1766,8 @@
 
             // 고정 항목 금액 적용
             const fixedDefaults = {
-                '에어컨시공': 3000000,
-                '음향': 900000,
+                '에어컨시공': (CONFIG.에어컨_시공비 * CONFIG.에어컨_기본대수) + (CONFIG.에어컨_배관비 * CONFIG.배관_기본m),
+                '음향': (CONFIG.스피커 * CONFIG.스피커_기본대수) + CONFIG.엠프 + CONFIG.음향시공비,
                 '디자인물': CONFIG.디자인물,
             };
             Object.entries(fixedDefaults).forEach(([key, val]) => {
@@ -1871,9 +1871,45 @@
         }
 
         // =============================================================
+        // data-price 동기화 (CONFIG 값을 input.data-price 및 단가 셀에 반영)
+        // =============================================================
+        function syncDataPrices() {
+            const priceMap = {
+                'signage_qty':          CONFIG.간판,
+                'table_4_qty':          CONFIG.테이블4인,
+                'table_6_qty':          CONFIG.테이블6인,
+                'chair_qty':            CONFIG.의자,
+                'booth_seat_qty':       CONFIG.붙박이석,
+                'counter_qty':          CONFIG.카운터가구,
+                'partition_wood_qty':   CONFIG.파티션원목,
+                'partition_std_qty':    CONFIG.파티션일반,
+                'direct_fire_qty':      CONFIG.직화기,
+                'duct_qty':             CONFIG.덕트,
+                'qty_철거':             CONFIG.철거,
+                'qty_에어컨40스탠드':   CONFIG.에어컨_40평스탠드,
+                'qty_에어컨벽걸이':     CONFIG.에어컨_벽걸이6평,
+                'qty_에어컨80스탠드':   CONFIG.에어컨_80평스탠드,
+                'qty_에어컨40시스템':   CONFIG.에어컨_40평시스템,
+                'qty_전기증설':         CONFIG.전기공사_증설,
+                'qty_전기배선':         CONFIG.전기공사_배선,
+                'qty_인조조경':         CONFIG.인조조경,
+            };
+            Object.entries(priceMap).forEach(function([id, price]) {
+                const input = document.getElementById(id);
+                if (!input) return;
+                input.dataset.price = price;
+                const priceTd = input.closest('tr').querySelector('td.price');
+                if (priceTd && !priceTd.id) {
+                    priceTd.textContent = fmt(price) + '원';
+                }
+            });
+        }
+
+        // =============================================================
         // 초기화
         // =============================================================
         window.onload = function () {
+            syncDataPrices();
             updateStoreInfo();
         };
     </script>
