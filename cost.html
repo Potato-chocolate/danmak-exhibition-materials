@@ -63,30 +63,59 @@
         /* ===== 박람회 특전 배너 ===== */
         .benefit-banner {
             background: linear-gradient(135deg, #B8905B 0%, #D4B078 50%, #B8905B 100%);
-            padding: 14px 40px;
+            padding: 16px 40px;
+            text-align: center;
+        }
+        .benefit-title {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 14px;
+            gap: 16px;
+            margin-bottom: 14px;
         }
-        .benefit-tag {
-            background: var(--brand-dark);
-            color: var(--brand-gold-light);
-            font-size: 0.8rem;
-            font-weight: 700;
-            padding: 4px 14px;
-            border-radius: 20px;
-            letter-spacing: 0.5px;
+        .benefit-title::before,
+        .benefit-title::after {
+            content: '';
+            width: 40px;
+            height: 1px;
+            background: rgba(255,255,255,0.4);
         }
-        .benefit-text {
-            color: #fff;
-            font-size: 1.05rem;
-            font-weight: 500;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.15);
-        }
-        .benefit-text strong {
-            font-size: 1.2rem;
+        .benefit-title span {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 1rem;
             font-weight: 900;
+            color: var(--brand-gold-light);
+            letter-spacing: 3px;
+            background: var(--brand-dark);
+            padding: 6px 24px;
+            border-radius: 24px;
+            border: 1px solid rgba(212, 184, 150, 0.3);
+        }
+        .benefit-cards {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+        }
+        .benefit-card {
+            background: rgba(92, 45, 14, 0.85);
+            border-radius: 10px;
+            padding: 14px 28px;
+            text-align: center;
+            min-width: 180px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .benefit-card-label {
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--brand-gold-light);
+            margin-bottom: 4px;
+        }
+        .benefit-card-amount {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: #fff;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
 
         /* ===== 매장 기본정보 바 ===== */
@@ -513,8 +542,17 @@
 
     <!-- 박람회 특전 배너 -->
     <div class="benefit-banner">
-        <span class="benefit-tag">박람회 특전</span>
-        <span class="benefit-text">개설비용 <strong>400만원</strong> 지원</span>
+        <div class="benefit-title"><span>박람회 특전</span></div>
+        <div class="benefit-cards">
+            <div class="benefit-card">
+                <div class="benefit-card-label">가맹비 면제</div>
+                <div class="benefit-card-amount">880만원</div>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-card-label">마케팅 비용 지원</div>
+                <div class="benefit-card-amount">400만원</div>
+            </div>
+        </div>
     </div>
 
     <!-- 매장 기본정보 (sticky) -->
