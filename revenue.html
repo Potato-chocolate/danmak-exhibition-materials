@@ -915,7 +915,7 @@
                     <div class="category-details">
                         <table class="detail-table">
                             <tr>
-                                <td>주육류</td>
+                                <td>막창</td>
                                 <td id="food_main">-</td>
                                 <td id="ratio_food_main">15.0%</td>
                             </tr>
@@ -925,7 +925,7 @@
                                 <td id="ratio_food_sauce">3.3%</td>
                             </tr>
                             <tr>
-                                <td>부육류</td>
+                                <td>육류</td>
                                 <td id="food_sub_meat">-</td>
                                 <td id="ratio_food_sub_meat">3.3%</td>
                             </tr>
@@ -1367,9 +1367,9 @@
             // 식재료
             document.getElementById('food_costs_amount').textContent  = fmt(foodCosts);
             document.getElementById('food_costs_percent').textContent = '(' + pct(foodCosts, monthlySales) + ')';
-            document.getElementById('food_main').textContent          = fmt(Math.round(monthlySales * cr.식재료_주육류));
+            document.getElementById('food_main').textContent          = fmt(Math.round(monthlySales * cr.식재료_막창));
             document.getElementById('food_sauce').textContent         = fmt(Math.round(monthlySales * cr.식재료_소스));
-            document.getElementById('food_sub_meat').textContent      = fmt(Math.round(monthlySales * cr.식재료_부육류));
+            document.getElementById('food_sub_meat').textContent      = fmt(Math.round(monthlySales * cr.식재료_육류));
             document.getElementById('food_produce').textContent       = fmt(Math.round(monthlySales * cr.식재료_농산물));
 
             // 주류 음료
@@ -1407,9 +1407,9 @@
             // 비율 라벨 동적 업데이트 (CONFIG 기준)
             const toP = r => (r * 100).toFixed(1) + '%';
             const setEl = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
-            setEl('ratio_food_main',          toP(cr.식재료_주육류));
+            setEl('ratio_food_main',          toP(cr.식재료_막창));
             setEl('ratio_food_sauce',         toP(cr.식재료_소스));
-            setEl('ratio_food_sub_meat',      toP(cr.식재료_부육류));
+            setEl('ratio_food_sub_meat',      toP(cr.식재료_육류));
             setEl('ratio_food_produce',       toP(cr.식재료_농산물));
             setEl('ratio_beverage_regular',   toP(cr.주류_일반));
             setEl('ratio_beverage_premium',   toP(cr.주류_고급));
