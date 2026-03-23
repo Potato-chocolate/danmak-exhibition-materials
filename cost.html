@@ -1,0 +1,1882 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>단막 프랜차이즈 예상 개설비용 v2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --brand-primary: #8B4513;
+            --brand-dark: #5C2D0E;
+            --brand-gold: #B8905B;
+            --brand-gold-light: #D4B896;
+            --bg-page: #FDFBF7;
+            --bg-surface: #FFFFFF;
+            --bg-section: #FAF6F0;
+            --text-main: #2A2521;
+            --text-muted: #7A726A;
+            --text-light: #A49A90;
+            --border-color: #E8E3DD;
+            --border-light: #F0ECE6;
+            --accent-green: #2D7A4F;
+            --accent-red: #B54434;
+            --shadow-sm: 0 1px 3px rgba(42, 37, 33, 0.04);
+            --shadow-md: 0 4px 12px rgba(42, 37, 33, 0.06);
+            --shadow-lg: 0 12px 32px rgba(42, 37, 33, 0.08);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-page);
+            color: var(--text-main);
+            line-height: 1.6;
+            font-variant-numeric: tabular-nums;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ===== 헤더 ===== */
+        .header {
+            background: linear-gradient(135deg, var(--brand-dark) 0%, var(--brand-primary) 100%);
+            color: white;
+            padding: 32px 40px;
+            text-align: center;
+        }
+        .header h1 {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 6px;
+        }
+        .header p {
+            font-size: 0.95rem;
+            font-weight: 300;
+            opacity: 0.85;
+        }
+
+        /* ===== 매장 기본정보 바 ===== */
+        .store-info-bar {
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 40px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            box-shadow: var(--shadow-sm);
+        }
+        .store-info-grid {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .info-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .info-select {
+            background: var(--bg-section);
+            border: 1.5px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 10px 16px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-main);
+            cursor: pointer;
+            min-height: 44px;
+            transition: border-color 0.2s;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .info-select:focus {
+            outline: none;
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.12);
+        }
+        .info-badge {
+            background: var(--bg-section);
+            border: 1.5px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 10px 20px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--brand-primary);
+        }
+
+        /* ===== 메인 레이아웃 ===== */
+        .main-layout {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 28px;
+            padding: 28px 40px;
+            align-items: start;
+        }
+
+        /* ===== 비용 섹션들 ===== */
+        .cost-sections { display: flex; flex-direction: column; gap: 20px; }
+
+        .cost-section {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+        }
+        .cost-section:hover {
+            transform: translateY(-4px);
+            background-color: #FFFCF5;
+            border-color: var(--brand-gold-light);
+            box-shadow:
+                0 8px 25px rgba(184, 144, 91, 0.2),
+                0 2px 8px rgba(42, 37, 33, 0.05);
+        }
+        .cost-section:hover .section-header {
+            border-left-color: var(--brand-gold);
+            border-left-width: 6px;
+            background-color: #FFF5E0;
+        }
+        .cost-section:hover .section-subtotal {
+            color: #96681E;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            background: var(--bg-section);
+            border-bottom: 1px solid var(--border-color);
+            border-left: 4px solid var(--brand-primary);
+            transition: border-left-color 0.3s ease, border-left-width 0.3s ease, background-color 0.3s ease;
+        }
+        .section-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+        .section-subtotal {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--brand-primary);
+            transition: color 0.3s ease;
+        }
+
+        /* ===== 테이블 ===== */
+        .cost-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .cost-table th {
+            background: var(--bg-section);
+            padding: 12px 16px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .cost-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-light);
+            vertical-align: middle;
+            font-size: 0.92rem;
+        }
+        .cost-table tr:last-child td { border-bottom: none; }
+        .cost-table tr:hover { background: rgba(139, 69, 19, 0.02); }
+
+        .item-name { font-weight: 600; color: var(--text-main); }
+        .item-desc { font-size: 0.82rem; color: var(--text-muted); margin-top: 2px; }
+        .price { text-align: right; font-weight: 600; color: var(--text-main); white-space: nowrap; }
+        .total-cell { text-align: right; font-weight: 700; color: var(--brand-primary); white-space: nowrap; }
+
+        /* ===== 입력 요소 ===== */
+        .qty-input {
+            border: 1.5px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 8px 12px;
+            width: 72px;
+            text-align: center;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-main);
+            background: var(--bg-surface);
+            min-height: 44px;
+            transition: border-color 0.2s;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .qty-input:focus {
+            outline: none;
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.1);
+        }
+        .qty-input:disabled {
+            background: var(--bg-section);
+            color: var(--text-light);
+            cursor: not-allowed;
+        }
+
+        .item-checkbox {
+            width: 22px;
+            height: 22px;
+            accent-color: var(--brand-primary);
+            cursor: pointer;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            min-height: 44px;
+        }
+        .radio-item input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--brand-primary);
+        }
+        .radio-item label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        /* ===== 소계 행 ===== */
+        .subtotal-row {
+            background: var(--bg-section) !important;
+        }
+        .subtotal-row td {
+            border-top: 2px solid var(--border-color);
+            font-weight: 700;
+            color: var(--brand-primary);
+        }
+
+        /* ===== Sticky 요약 패널 ===== */
+        .summary-panel {
+            position: sticky;
+            top: 100px;
+            background: var(--brand-dark);
+            color: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+        .summary-header {
+            padding: 24px 24px 16px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .summary-header h3 {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 1rem;
+            font-weight: 400;
+            opacity: 0.8;
+            margin-bottom: 8px;
+        }
+        .summary-total {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--brand-gold-light);
+            letter-spacing: -1px;
+        }
+        .summary-items {
+            padding: 16px 20px;
+        }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 4px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            font-size: 0.88rem;
+        }
+        .summary-row:last-child { border-bottom: none; }
+        .summary-row .label {
+            opacity: 0.7;
+            font-weight: 400;
+        }
+        .summary-row .amount {
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+        }
+        .summary-divider {
+            border: none;
+            border-top: 1px solid rgba(255,255,255,0.15);
+            margin: 4px 20px;
+        }
+        .summary-grand-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 24px;
+            background: rgba(184, 144, 91, 0.15);
+            font-weight: 700;
+        }
+        .summary-grand-row .amount {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 1.2rem;
+            color: var(--brand-gold-light);
+        }
+        .summary-note {
+            padding: 14px 20px;
+            font-size: 0.78rem;
+            opacity: 0.5;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+
+        /* ===== 별도공사 아코디언 ===== */
+        .accordion-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 24px;
+            background: var(--bg-section);
+            border: none;
+            width: 100%;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            transition: background 0.2s;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .accordion-toggle:hover { background: var(--border-light); }
+        .accordion-toggle .arrow {
+            font-size: 0.75rem;
+            transition: transform 0.3s;
+        }
+        .accordion-toggle.open .arrow { transform: rotate(180deg); }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease;
+        }
+        .accordion-content.open {
+            max-height: 2000px;
+        }
+
+        /* ===== 참고사항 ===== */
+        .note-section {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 20px 24px;
+            margin-top: 8px;
+            border-left: 4px solid var(--brand-gold);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+        }
+        .note-section:hover {
+            transform: translateY(-4px);
+            background-color: #FFF9EE;
+            border-color: var(--brand-gold-light);
+            box-shadow:
+                0 8px 25px rgba(184, 144, 91, 0.2),
+                0 2px 8px rgba(42, 37, 33, 0.05);
+        }
+        .note-section h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+        .note-section ul {
+            list-style: none;
+            padding: 0;
+        }
+        .note-section li {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            padding: 4px 0;
+            padding-left: 14px;
+            position: relative;
+        }
+        .note-section li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 12px;
+            width: 4px;
+            height: 4px;
+            background: var(--text-light);
+            border-radius: 50%;
+        }
+
+        /* ===== 반응형 ===== */
+        @media (max-width: 1024px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+            .summary-panel {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+                z-index: 100;
+                box-shadow: 0 -8px 32px rgba(0,0,0,0.15);
+            }
+            .summary-items { display: none; }
+            .summary-note { display: none; }
+            .summary-header { padding: 16px 24px; }
+            .summary-total { font-size: 1.6rem; }
+            .cost-sections { padding-bottom: 120px; }
+            .store-info-grid { flex-wrap: wrap; gap: 12px; }
+            .header { padding: 24px 20px; }
+            .header h1 { font-size: 1.6rem; }
+        }
+
+        /* ===== 인쇄 ===== */
+        @media print {
+            body { background: white; }
+            .store-info-bar { position: static; box-shadow: none; }
+            .summary-panel {
+                position: static;
+                background: white;
+                color: var(--text-main);
+                border: 2px solid var(--brand-primary);
+                page-break-before: always;
+            }
+            .summary-total { color: var(--brand-primary); }
+            .summary-row .label { color: var(--text-muted); }
+            .summary-row .amount { color: var(--text-main); }
+            .summary-grand-row { background: var(--bg-section); }
+            .summary-grand-row .amount { color: var(--brand-primary); }
+            .accordion-content { max-height: none !important; display: block !important; }
+            .qty-input, .item-checkbox, .info-select { border: 1px solid #ccc; }
+            .cost-section { page-break-inside: avoid; }
+            .header { background: white; color: var(--text-main); border-bottom: 3px solid var(--brand-primary); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 헤더 -->
+    <div class="header">
+        <h1>단막 프랜차이즈 예상 개설비용</h1>
+        <p>2026년 기준 VAT 포함 추정 금액</p>
+    </div>
+
+    <!-- 매장 기본정보 (sticky) -->
+    <div class="store-info-bar">
+        <div class="store-info-grid">
+            <div class="info-item">
+                <span class="info-label">상권 유형</span>
+                <select class="info-select" id="business_type" onchange="updateStoreInfo()">
+                    <option value="오피스" data-rotation="2.5">오피스</option>
+                    <option value="주거" data-rotation="2.5">주거</option>
+                    <option value="먹자" data-rotation="3">먹자골목</option>
+                    <option value="대학생" data-rotation="3.5">대학가</option>
+                    <option value="복합" data-rotation="3" selected>복합상권</option>
+                    <option value="데이트" data-rotation="3.5">데이트</option>
+                </select>
+            </div>
+            <div class="info-item">
+                <span class="info-label">매장 평수</span>
+                <select class="info-select" id="store_area" onchange="updateStoreInfo()">
+                    <option value="30">30평</option>
+                    <option value="35">35평</option>
+                    <option value="40" selected>40평</option>
+                    <option value="45">45평</option>
+                    <option value="50">50평</option>
+                    <option value="60">60평</option>
+                    <option value="70">70평</option>
+                </select>
+            </div>
+            <div class="info-item">
+                <span class="info-label">테이블 수</span>
+                <span class="info-badge" id="table_count">16개</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 메인 레이아웃 -->
+    <div class="main-layout">
+
+        <!-- 좌측: 비용 섹션들 -->
+        <div class="cost-sections">
+
+            <!-- 섹션 1: 본사비용 -->
+            <div class="cost-section" id="section-hq">
+                <div class="section-header">
+                    <span class="section-title">본사비용</span>
+                    <span class="section-subtotal" id="subtotal_display_1">0원</span>
+                </div>
+                <table class="cost-table">
+                    <thead>
+                        <tr>
+                            <th style="width:44px">선택</th>
+                            <th style="text-align:left">항목</th>
+                            <th>금액</th>
+                            <th style="width:60px">수량</th>
+                            <th>합계</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 가맹비: 디폴트 체크 해제 -->
+                        <tr>
+                            <td style="text-align:center">
+                                <input type="checkbox" class="item-checkbox" id="cb_가맹비" onchange="calculateCheckboxRow(this)">
+                            </td>
+                            <td>
+                                <div class="item-name">가맹비</div>
+                                <div class="item-desc">가맹비 면제</div>
+                            </td>
+                            <td class="price" id="price_가맹비">8,000,000원</td>
+                            <td style="text-align:center">1</td>
+                            <td class="total-cell" id="total_가맹비" style="color:var(--text-light); text-decoration:line-through;">0원</td>
+                        </tr>
+                        <!-- 교육비: 디폴트 체크 -->
+                        <tr>
+                            <td style="text-align:center">
+                                <input type="checkbox" class="item-checkbox" id="cb_교육비" checked onchange="calculateCheckboxRow(this)">
+                            </td>
+                            <td>
+                                <div class="item-name">교육비</div>
+                                <div class="item-desc">조리, 서비스, 매장관리 교육</div>
+                            </td>
+                            <td class="price" id="price_교육비">4,400,000원</td>
+                            <td style="text-align:center">1</td>
+                            <td class="total-cell" id="total_교육비">4,400,000원</td>
+                        </tr>
+                        <!-- 물류보증금 -->
+                        <tr>
+                            <td style="text-align:center">
+                                <input type="checkbox" class="item-checkbox" id="cb_물류보증금" checked onchange="calculateCheckboxRow(this)">
+                            </td>
+                            <td>
+                                <div class="item-name">물류보증금</div>
+                            </td>
+                            <td class="price" id="price_물류보증금">2,000,000원</td>
+                            <td style="text-align:center">1</td>
+                            <td class="total-cell" id="total_물류보증금">2,000,000원</td>
+                        </tr>
+                        <!-- 실측 및 도면 -->
+                        <tr>
+                            <td style="text-align:center">
+                                <input type="checkbox" class="item-checkbox" id="cb_실측도면" checked onchange="calculateCheckboxRow(this)">
+                            </td>
+                            <td>
+                                <div class="item-name">실측 및 도면</div>
+                            </td>
+                            <td class="price" id="price_실측도면">300,000원</td>
+                            <td style="text-align:center">1</td>
+                            <td class="total-cell" id="total_실측도면">300,000원</td>
+                        </tr>
+                        <!-- 감리비: 디폴트 체크 해제 -->
+                        <tr>
+                            <td style="text-align:center">
+                                <input type="checkbox" class="item-checkbox" id="cb_감리비" onchange="calculateCheckboxRow(this)">
+                            </td>
+                            <td>
+                                <div class="item-name">감리비</div>
+                                <div class="item-desc">본사 시공시 면제</div>
+                            </td>
+                            <td class="price" id="price_감리비">3,000,000원</td>
+                            <td style="text-align:center">1</td>
+                            <td class="total-cell" id="total_감리비" style="color:var(--text-light);">0원</td>
+                        </tr>
+                        <tr class="subtotal-row">
+                            <td colspan="4" style="font-weight:700;">본사비용 합계</td>
+                            <td class="total-cell" id="subtotal_1">6,700,000원</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 섹션 2: 인테리어 -->
+            <div class="cost-section" id="section-interior">
+                <div class="section-header">
+                    <span class="section-title">인테리어</span>
+                    <span class="section-subtotal" id="subtotal_display_2">0원</span>
+                </div>
+                <table class="cost-table">
+                    <thead>
+                        <tr>
+                            <th style="text-align:left">항목</th>
+                            <th>단가</th>
+                            <th style="width:130px">면적</th>
+                            <th>합계</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="item-name">인테리어</div>
+                                <div class="item-desc">평당 단가 적용 (VAT 포함)</div>
+                            </td>
+                            <td class="price" id="interior_unit_price">1,900,000원/평</td>
+                            <td style="text-align:center">
+                                <input type="number" class="qty-input" id="interior_area" value="40" min="0" onchange="calculateInteriorRow()"> 평
+                            </td>
+                            <td class="total-cell" id="interior_total">76,000,000원</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="item-name">간판</div>
+                                <div class="item-desc">메인 간판 1세트 + 내부사인물 포함</div>
+                            </td>
+                            <td class="price">8,800,000원</td>
+                            <td style="text-align:center">
+                                <input type="number" class="qty-input" id="signage_qty" value="1" min="0" data-price="8800000" onchange="calculateRow(this)">
+                            </td>
+                            <td class="total-cell" id="signage_total">8,800,000원</td>
+                        </tr>
+                        <tr class="subtotal-row">
+                            <td colspan="3" style="font-weight:700;">인테리어 합계</td>
+                            <td class="total-cell" id="subtotal_2">84,800,000원</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 섹션 3: 테이블 및 의자 -->
+            <div class="cost-section" id="section-furniture">
+                <div class="section-header">
+                    <span class="section-title">테이블 및 의자</span>
+                    <span class="section-subtotal" id="subtotal_display_3">0원</span>
+                </div>
+                <table class="cost-table">
+                    <thead>
+                        <tr>
+                            <th style="text-align:left">항목</th>
+                            <th>규격</th>
+                            <th>단가</th>
+                            <th style="width:80px">수량</th>
+                            <th>합계</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><div class="item-name">4인 테이블</div></td>
+                            <td style="font-size:0.82rem; color:var(--text-muted)">1200x800x720</td>
+                            <td class="price">215,000원</td>
+                            <td style="text-align:center">
+                                <input type="number" class="qty-input" id="table_4_qty" value="16" min="0" data-price="215000" onchange="calculateTableChairSync(this)">
+                            </td>
+                            <td class="total-cell" id="total_table4">3,440,000원</td>
+                        </tr>
+                        <tr>
+                            <td><div class="item-name">6인 테이블</div></td>
+                            <td style="font-size:0.82rem; color:var(--text-muted)">1800x800x720</td>
+                            <td class="price">270,000원</td>
+                            <td style="text-align:center">
+                                <input type="number" class="qty-input" id="table_6_qty" value="0" min="0" data-price="270000" onchange="calculateTableChairSync(this)">
+                            </td>
+                            <td class="total-cell" id="total_table6" style="color:var(--text-light)">0원</td>
+                        </tr>
+                        <tr>
+                            <td><div class="item-name">의자</div></td>
+                            <td style="font-size:0.82rem; color:var(--text-muted)">1인용</td>
+                            <td class="price">90,000원</td>
+                            <td style="text-align:center">
+                                <input type="number" class="qty-input" id="chair_qty" value="64" min="0" data-price="90000" onchange="calculateRow(this)">
+                            </td>
+                            <td class="total-cell" id="total_chair">5,760,000원</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="item-name">붙박이석</div>
+                                <div class="item-desc">0.5m당 1석</div>
+                            </td>
+                            <td></td>
+                            <td class="price">170,000원</td>
+                            <td style="text-align:center">
+                                <input type="number" class="qty-input" id="booth_seat_qty" value="0" min="0" data-price="170000" onchange="calculateRow(this)">
+                            </td>
+                            <td class="total-cell" id="total_booth" style="color:var(--text-light)">0원</td>
+                        </tr>
+                        <tr>
+                            <td><div class="item-name">카운터가구</div></td>
+                            <td></td>
+                            <td class="price">1,200,000원</td>
+                            <td style="text-align:center">
+                                <input type="number" class="qty-input" id="counter_qty" value="1" min="0" data-price="1200000" onchange="calculateRow(this)">
+                            </td>
+                            <td class="total-cell" id="total_counter">1,200,000원</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="item-name">파티션 (원목)</div>
+                                <div class="item-desc">원목 제작</div>
+                            </td>
+                            <td></td>
+                            <td class="price">1,200,000원</td>
+                            <td style="text-align:center">
+                                <input type="number" class="qty-input" id="partition_wood_qty" value="0" min="0" data-price="1200000" onchange="calculateRow(this)">
+                            </td>
+                            <td class="total-cell" id="total_partition_wood" style="color:var(--text-light)">0원</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="item-name">파티션 (일반)</div>
+                                <div class="item-desc">일반 가구재 제작</div>
+                            </td>
+                            <td></td>
+                            <td class="price">650,000원</td>
+                            <td style="text-align:center">
+                                <input type="number" class="qty-input" id="partition_std_qty" value="0" min="0" data-price="650000" onchange="calculateRow(this)">
+                            </td>
+                            <td class="total-cell" id="total_partition_std" style="color:var(--text-light)">0원</td>
+                        </tr>
+                        <tr class="subtotal-row">
+                            <td colspan="4" style="font-weight:700;">테이블 및 의자 합계</td>
+                            <td class="total-cell" id="subtotal_3">10,400,000원</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 섹션 4: 주방 설비 및 집기 -->
+            <div class="cost-section" id="section-kitchen">
+                <div class="section-header">
+                    <span class="section-title">주방 설비 및 집기</span>
+                    <span class="section-subtotal" id="subtotal_display_4">0원</span>
+                </div>
+                <table class="cost-table">
+                    <thead>
+                        <tr>
+                            <th style="width:44px">선택</th>
+                            <th style="text-align:left">항목</th>
+                            <th>기준</th>
+                            <th>합계</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="text-align:center">
+                                <input type="checkbox" class="item-checkbox" id="cb_equipment" checked onchange="calculateKitchenRow('equipment', this)">
+                            </td>
+                            <td>
+                                <div class="item-name">주방설비</div>
+                                <div class="item-desc">냉장고, 세척기, 싱크대, 작업대 등</div>
+                            </td>
+                            <td style="text-align:center; font-size:0.85rem; color:var(--text-muted)" id="equipment_area_label">40평</td>
+                            <td class="total-cell" id="total_equipment">13,701,000원</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:center">
+                                <input type="checkbox" class="item-checkbox" id="cb_fixture" checked onchange="calculateKitchenRow('fixture', this)">
+                            </td>
+                            <td>
+                                <div class="item-name">홀/주방 집기</div>
+                                <div class="item-desc">테이블웨어, 받드, 수저세트 등</div>
+                            </td>
+                            <td style="text-align:center; font-size:0.85rem; color:var(--text-muted)" id="fixture_area_label">40평</td>
+                            <td class="total-cell" id="total_fixture">10,101,400원</td>
+                        </tr>
+                        <tr class="subtotal-row">
+                            <td colspan="3" style="font-weight:700;">주방 설비 및 집기 합계</td>
+                            <td class="total-cell" id="subtotal_4">23,802,400원</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 섹션 5: 화로 및 착화기 -->
+            <div class="cost-section" id="section-grill">
+                <div class="section-header">
+                    <span class="section-title">화로 및 착화기</span>
+                    <span class="section-subtotal" id="subtotal_display_5">0원</span>
+                </div>
+                <table class="cost-table">
+                    <thead>
+                        <tr>
+                            <th style="text-align:left">항목</th>
+                            <th>단가</th>
+                            <th style="width:80px">수량</th>
+                            <th>합계</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 화로 유형 선택 라디오 -->
+                        <tr>
+                            <td>
+                                <div class="item-name">화로 유형</div>
+                                <div class="item-desc">화로세트 단가 결정</div>
+                            </td>
+                            <td colspan="3" style="padding: 12px 16px;">
+                                <div class="radio-group">
+                                    <div class="radio-item">
+                                        <input type="radio" name="grill_type" id="grill_table" value="table" checked onchange="calculateGrillSelection()">
+                                        <label for="grill_table">테이블화로형 110,500원</label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input type="radio" name="grill_type" id="grill_electric" value="electric" onchange="calculateGrillSelection()">
+                                        <label for="grill_electric">착화식로스터 210,000원</label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <!-- 화로세트 합계 행 -->
+                        <tr>
+                            <td>
+                                <div class="item-name">화로세트 합계</div>
+                                <div class="item-desc">항아리 화로 + 물받이 링 + 숯통</div>
+                            </td>
+                            <td class="price" id="grill_unit_price">110,500원</td>
+                            <td style="text-align:center">
+                                <input type="number" class="qty-input" id="grill_qty" value="16" min="0" data-price="110500" onchange="calculateGrillQtyChange()">
+                            </td>
+                            <td class="total-cell" id="grill_total">1,768,000원</td>
+                        </tr>
+                        <!-- 불판: 테이블 수 × 3 -->
+                        <tr>
+                            <td>
+                                <div class="item-name">불판</div>
+                                <div class="item-desc">단막 전용 330mm (테이블 x 3)</div>
+                            </td>
+                            <td class="price">41,800원</td>
+                            <td style="text-align:center">
+                                <input type="number" class="qty-input" id="grill_plate_qty" value="48" min="0" data-price="41800" onchange="calculateRow(this)">
+                            </td>
+                            <td class="total-cell" id="total_plate">2,006,400원</td>
+                        </tr>
+                        <!-- 착화기: 40평 이상 2대 -->
+                        <tr>
+                            <td>
+                                <div class="item-name">착화기</div>
+                                <div class="item-desc">실내용 (40평 이상 2대)</div>
+                            </td>
+                            <td class="price">1,780,000원</td>
+                            <td style="text-align:center">
+                                <input type="number" class="qty-input" id="igniter_qty" value="2" min="0" data-price="1780000" onchange="calculateRow(this)">
+                            </td>
+                            <td class="total-cell" id="igniter_total">3,560,000원</td>
+                        </tr>
+                        <!-- 직화기: 기본 0, 수량 입력 가능 -->
+                        <tr>
+                            <td>
+                                <div class="item-name">직화기</div>
+                                <div class="item-desc">로스터 후드팬 (테이블당)</div>
+                            </td>
+                            <td class="price">80,000원</td>
+                            <td style="text-align:center">
+                                <input type="number" class="qty-input" id="direct_fire_qty" value="0" min="0" data-price="80000" onchange="calculateRow(this)">
+                            </td>
+                            <td class="total-cell" id="total_direct_fire" style="color:var(--text-light)">0원</td>
+                        </tr>
+                        <tr class="subtotal-row">
+                            <td colspan="3" style="font-weight:700;">화로 및 착화기 합계</td>
+                            <td class="total-cell" id="subtotal_5">7,334,400원</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 섹션 6: 별도공사 -->
+            <div class="cost-section" id="section-extra">
+                <div class="section-header">
+                    <span class="section-title">별도공사</span>
+                    <span class="section-subtotal" id="subtotal_display_6">0원</span>
+                </div>
+
+                <!-- 기본 항목 (항상 노출) -->
+                <table class="cost-table" id="extra-basic-table">
+                    <thead>
+                        <tr>
+                            <th style="width:44px">선택</th>
+                            <th style="text-align:left">항목</th>
+                            <th>단가</th>
+                            <th style="width:80px">수량</th>
+                            <th>합계</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 덕트: 평수 연동 -->
+                        <tr>
+                            <td style="text-align:center">
+                                <input type="checkbox" class="item-checkbox extra-cb" id="cb_덕트" checked onchange="toggleExtraRow(this)">
+                            </td>
+                            <td><div class="item-name">덕트</div><div class="item-desc">평당 적용</div></td>
+                            <td class="price">200,000원</td>
+                            <td style="text-align:center">
+                                <input type="number" class="qty-input" id="duct_qty" value="40" min="0" data-price="200000" onchange="calculateRow(this)">
+                            </td>
+                            <td class="total-cell" id="total_덕트">8,000,000원</td>
+                        </tr>
+                        <!-- 단지실 조정: 라디오 -->
+                        <tr>
+                            <td style="text-align:center">
+                                <input type="checkbox" class="item-checkbox extra-cb" id="cb_단지" checked onchange="toggleExtraRow(this)">
+                            </td>
+                            <td>
+                                <div class="item-name">단지실 조정</div>
+                                <div class="radio-group" style="margin-top:6px; gap:12px;">
+                                    <div class="radio-item">
+                                        <input type="radio" name="danji" id="danji_1" value="1" checked onchange="calculateDanjiSelection()">
+                                        <label for="danji_1">1대 200만</label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input type="radio" name="danji" id="danji_2" value="2" onchange="calculateDanjiSelection()">
+                                        <label for="danji_2">2대 300만</label>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="price" id="danji_unit_price">2,000,000원</td>
+                            <td style="text-align:center">1</td>
+                            <td class="total-cell" id="total_단지">2,000,000원</td>
+                        </tr>
+                        <!-- 에어컨 40평 스탠드 -->
+                        <tr>
+                            <td style="text-align:center">
+                                <input type="checkbox" class="item-checkbox extra-cb" id="cb_에어컨40스탠드" checked onchange="toggleExtraRow(this)">
+                            </td>
+                            <td><div class="item-name">에어컨 (40평 스탠드)</div><div class="item-desc">케리어 신품</div></td>
+                            <td class="price">1,550,000원</td>
+                            <td style="text-align:center">
+                                <input type="number" class="qty-input" id="qty_에어컨40스탠드" value="2" min="0" data-price="1550000" onchange="calculateRow(this)">
+                            </td>
+                            <td class="total-cell" id="total_에어컨40스탠드">3,100,000원</td>
+                        </tr>
+                        <!-- 에어컨 벽걸이 6평 -->
+                        <tr>
+                            <td style="text-align:center">
+                                <input type="checkbox" class="item-checkbox extra-cb" id="cb_에어컨벽걸이" checked onchange="toggleExtraRow(this)">
+                            </td>
+                            <td><div class="item-name">에어컨 벽걸이 (6평)</div><div class="item-desc">케리어 신품</div></td>
+                            <td class="price">500,000원</td>
+                            <td style="text-align:center">
+                                <input type="number" class="qty-input" id="qty_에어컨벽걸이" value="1" min="0" data-price="500000" onchange="calculateRow(this)">
+                            </td>
+                            <td class="total-cell" id="total_에어컨벽걸이">500,000원</td>
+                        </tr>
+                        <!-- 에어컨 설치비 (시공비 + 배관비) -->
+                        <tr>
+                            <td style="text-align:center">
+                                <input type="checkbox" class="item-checkbox extra-cb" id="cb_에어컨시공" checked onchange="toggleExtraRow(this)">
+                            </td>
+                            <td>
+                                <div class="item-name">에어컨 설치비</div>
+                                <div class="item-desc">시공비 (대당) + 배관비 (m당)</div>
+                            </td>
+                            <td class="price" style="font-size:0.82rem; color:var(--text-muted)">일괄</td>
+                            <td style="text-align:center; font-size:0.85rem; color:var(--text-muted)">-</td>
+                            <td class="total-cell" id="total_에어컨시공">3,000,000원</td>
+                        </tr>
+                        <!-- 음향시설 -->
+                        <tr>
+                            <td style="text-align:center">
+                                <input type="checkbox" class="item-checkbox extra-cb" id="cb_음향" checked onchange="toggleExtraRow(this)">
+                            </td>
+                            <td><div class="item-name">음향시설</div><div class="item-desc">스피커 4대 + 엠프 + 시공비</div></td>
+                            <td class="price" style="font-size:0.82rem; color:var(--text-muted)">일괄</td>
+                            <td style="text-align:center; font-size:0.85rem; color:var(--text-muted)">일괄</td>
+                            <td class="total-cell" id="total_음향">900,000원</td>
+                        </tr>
+                        <!-- 디자인물: 600,000 고정 -->
+                        <tr>
+                            <td style="text-align:center">
+                                <input type="checkbox" class="item-checkbox extra-cb" id="cb_디자인물" checked onchange="toggleExtraRow(this)">
+                            </td>
+                            <td><div class="item-name">디자인물</div><div class="item-desc">명함, 메뉴판, 배너 등</div></td>
+                            <td class="price">600,000원</td>
+                            <td style="text-align:center">1</td>
+                            <td class="total-cell" id="total_디자인물">600,000원</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- 추가 항목 아코디언 -->
+                <button class="accordion-toggle" id="accordion-btn" onclick="toggleAccordion()">
+                    추가 공사 항목 (점포 상황에 따라 선택)
+                    <span class="arrow">&#9660;</span>
+                </button>
+                <div class="accordion-content" id="accordion-body">
+                    <table class="cost-table">
+                        <tbody>
+                            <!-- 주방 신설 -->
+                            <tr>
+                                <td style="text-align:center; width:44px">
+                                    <input type="checkbox" class="item-checkbox extra-cb" id="cb_주방신설" onchange="toggleExtraRow(this)">
+                                </td>
+                                <td><div class="item-name">주방 신설</div></td>
+                                <td class="price">1,500,000원</td>
+                                <td style="text-align:center; width:80px">1</td>
+                                <td class="total-cell" id="total_주방신설" style="color:var(--text-light)">0원</td>
+                            </tr>
+                            <!-- 도시가스 신설 -->
+                            <tr>
+                                <td style="text-align:center">
+                                    <input type="checkbox" class="item-checkbox extra-cb" id="cb_도시가스" onchange="toggleExtraRow(this)">
+                                </td>
+                                <td><div class="item-name">도시가스 신설</div></td>
+                                <td class="price">2,500,000원</td>
+                                <td style="text-align:center">1</td>
+                                <td class="total-cell" id="total_도시가스" style="color:var(--text-light)">0원</td>
+                            </tr>
+                            <!-- 철거: 평당 -->
+                            <tr>
+                                <td style="text-align:center">
+                                    <input type="checkbox" class="item-checkbox extra-cb" id="cb_철거" onchange="toggleExtraRow(this)">
+                                </td>
+                                <td><div class="item-name">철거</div><div class="item-desc">평당 적용</div></td>
+                                <td class="price">250,000원</td>
+                                <td style="text-align:center">
+                                    <input type="number" class="qty-input" id="qty_철거" value="0" min="0" data-price="250000" onchange="calculateRow(this)" disabled>
+                                </td>
+                                <td class="total-cell" id="total_철거" style="color:var(--text-light)">0원</td>
+                            </tr>
+                            <!-- 화장실 -->
+                            <tr>
+                                <td style="text-align:center">
+                                    <input type="checkbox" class="item-checkbox extra-cb" id="cb_화장실" onchange="toggleExtraRow(this)">
+                                </td>
+                                <td><div class="item-name">화장실</div><div class="item-desc">남녀공용 1칸</div></td>
+                                <td class="price">2,500,000원</td>
+                                <td style="text-align:center">1</td>
+                                <td class="total-cell" id="total_화장실" style="color:var(--text-light)">0원</td>
+                            </tr>
+                            <!-- 소방전기공사 -->
+                            <tr>
+                                <td style="text-align:center">
+                                    <input type="checkbox" class="item-checkbox extra-cb" id="cb_소방전기" onchange="toggleExtraRow(this)">
+                                </td>
+                                <td><div class="item-name">소방전기공사</div></td>
+                                <td class="price">2,500,000원</td>
+                                <td style="text-align:center">1</td>
+                                <td class="total-cell" id="total_소방전기" style="color:var(--text-light)">0원</td>
+                            </tr>
+                            <!-- 에어컨 80평 스탠드 -->
+                            <tr>
+                                <td style="text-align:center">
+                                    <input type="checkbox" class="item-checkbox extra-cb" id="cb_에어컨80스탠드" onchange="toggleExtraRow(this)">
+                                </td>
+                                <td><div class="item-name">에어컨 (80평 스탠드)</div></td>
+                                <td class="price">2,890,000원</td>
+                                <td style="text-align:center">
+                                    <input type="number" class="qty-input" id="qty_에어컨80스탠드" value="0" min="0" data-price="2890000" onchange="calculateRow(this)" disabled>
+                                </td>
+                                <td class="total-cell" id="total_에어컨80스탠드" style="color:var(--text-light)">0원</td>
+                            </tr>
+                            <!-- 에어컨 40평 시스템 -->
+                            <tr>
+                                <td style="text-align:center">
+                                    <input type="checkbox" class="item-checkbox extra-cb" id="cb_에어컨40시스템" onchange="toggleExtraRow(this)">
+                                </td>
+                                <td><div class="item-name">에어컨 (40평 시스템)</div></td>
+                                <td class="price">1,450,000원</td>
+                                <td style="text-align:center">
+                                    <input type="number" class="qty-input" id="qty_에어컨40시스템" value="0" min="0" data-price="1450000" onchange="calculateRow(this)" disabled>
+                                </td>
+                                <td class="total-cell" id="total_에어컨40시스템" style="color:var(--text-light)">0원</td>
+                            </tr>
+                            <!-- 전기공사 증설 -->
+                            <tr>
+                                <td style="text-align:center">
+                                    <input type="checkbox" class="item-checkbox extra-cb" id="cb_전기증설" onchange="toggleExtraRow(this)">
+                                </td>
+                                <td><div class="item-name">전기공사 (계약전력 증설)</div><div class="item-desc">kW당</div></td>
+                                <td class="price">120,000원</td>
+                                <td style="text-align:center">
+                                    <input type="number" class="qty-input" id="qty_전기증설" value="0" min="0" data-price="120000" onchange="calculateRow(this)" disabled>
+                                </td>
+                                <td class="total-cell" id="total_전기증설" style="color:var(--text-light)">0원</td>
+                            </tr>
+                            <!-- 전기공사 배선 -->
+                            <tr>
+                                <td style="text-align:center">
+                                    <input type="checkbox" class="item-checkbox extra-cb" id="cb_전기배선" onchange="toggleExtraRow(this)">
+                                </td>
+                                <td><div class="item-name">전기공사 (배선)</div><div class="item-desc">배선, 차단기 교체 등</div></td>
+                                <td class="price">1,000,000원</td>
+                                <td style="text-align:center">
+                                    <input type="number" class="qty-input" id="qty_전기배선" value="0" min="0" data-price="1000000" onchange="calculateRow(this)" disabled>
+                                </td>
+                                <td class="total-cell" id="total_전기배선" style="color:var(--text-light)">0원</td>
+                            </tr>
+                            <!-- 한전불입금 -->
+                            <tr>
+                                <td style="text-align:center">
+                                    <input type="checkbox" class="item-checkbox extra-cb" id="cb_한전불입금" onchange="toggleExtraRow(this)">
+                                </td>
+                                <td><div class="item-name">한전불입금</div></td>
+                                <td class="price">2,000,000원</td>
+                                <td style="text-align:center">1</td>
+                                <td class="total-cell" id="total_한전불입금" style="color:var(--text-light)">0원</td>
+                            </tr>
+                            <!-- 소방필증 -->
+                            <tr>
+                                <td style="text-align:center">
+                                    <input type="checkbox" class="item-checkbox extra-cb" id="cb_소방필증" onchange="toggleExtraRow(this)">
+                                </td>
+                                <td><div class="item-name">소방필증</div></td>
+                                <td class="price">1,000,000원</td>
+                                <td style="text-align:center">1</td>
+                                <td class="total-cell" id="total_소방필증" style="color:var(--text-light)">0원</td>
+                            </tr>
+                            <!-- 소방완비증명 -->
+                            <tr>
+                                <td style="text-align:center">
+                                    <input type="checkbox" class="item-checkbox extra-cb" id="cb_소방완비" onchange="toggleExtraRow(this)">
+                                </td>
+                                <td><div class="item-name">소방완비증명</div></td>
+                                <td class="price">4,500,000원</td>
+                                <td style="text-align:center">1</td>
+                                <td class="total-cell" id="total_소방완비" style="color:var(--text-light)">0원</td>
+                            </tr>
+                            <!-- 인조조경 -->
+                            <tr>
+                                <td style="text-align:center">
+                                    <input type="checkbox" class="item-checkbox extra-cb" id="cb_인조조경" onchange="toggleExtraRow(this)">
+                                </td>
+                                <td><div class="item-name">인조조경</div><div class="item-desc">강자갈 기준</div></td>
+                                <td class="price">150,000원</td>
+                                <td style="text-align:center">
+                                    <input type="number" class="qty-input" id="qty_인조조경" value="0" min="0" data-price="150000" onchange="calculateRow(this)" disabled>
+                                </td>
+                                <td class="total-cell" id="total_인조조경" style="color:var(--text-light)">0원</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 별도공사 소계 -->
+                <table class="cost-table">
+                    <tbody>
+                        <tr class="subtotal-row">
+                            <td colspan="4" style="font-weight:700; padding: 14px 16px;">별도공사 합계</td>
+                            <td class="total-cell" id="subtotal_6" style="padding: 14px 16px;">14,600,000원</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 참고사항 -->
+            <div class="note-section">
+                <h4>참고사항</h4>
+                <ul>
+                    <li>상기 금액은 추정금액으로 점포 상황 및 환경에 따라 변경될 수 있습니다</li>
+                    <li>별도공사(철거, 주방, 화장실, 소방 등)는 현장 여건에 따라 추가 비용 발생</li>
+                    <li>단지 렌탈 비용: 1대 10만원/월</li>
+                    <li>착화기: 35평 이하 1대, 40평 이상 2대 기본 적용</li>
+                    <li>불판 수량: 테이블 수 x 3개 기준</li>
+                </ul>
+            </div>
+
+        </div>
+
+        <!-- 우측: Sticky 요약 패널 -->
+        <div class="summary-panel">
+            <div class="summary-header">
+                <h3>총 예상 개설비용</h3>
+                <div class="summary-total" id="grand_total_display">0원</div>
+            </div>
+            <div class="summary-items">
+                <div class="summary-row">
+                    <span class="label">본사비용</span>
+                    <span class="amount" id="panel_subtotal_1">0원</span>
+                </div>
+                <div class="summary-row">
+                    <span class="label">인테리어</span>
+                    <span class="amount" id="panel_subtotal_2">0원</span>
+                </div>
+                <div class="summary-row">
+                    <span class="label">테이블 및 의자</span>
+                    <span class="amount" id="panel_subtotal_3">0원</span>
+                </div>
+                <div class="summary-row">
+                    <span class="label">주방 설비 및 집기</span>
+                    <span class="amount" id="panel_subtotal_4">0원</span>
+                </div>
+                <div class="summary-row">
+                    <span class="label">화로 및 착화기</span>
+                    <span class="amount" id="panel_subtotal_5">0원</span>
+                </div>
+                <div class="summary-row">
+                    <span class="label">별도공사</span>
+                    <span class="amount" id="panel_subtotal_6">0원</span>
+                </div>
+            </div>
+            <hr class="summary-divider">
+            <div class="summary-grand-row">
+                <span>합계</span>
+                <span class="amount" id="grand_total_panel">0원</span>
+            </div>
+            <div class="summary-note">
+                VAT 포함 / 2026년 기준 추정
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 설정 파일 (숫자 변경은 이 파일에서) -->
+    <script src="config-cost.js"></script>
+
+    <script>
+        // =============================================================
+        // 유틸리티
+        // =============================================================
+
+        // 숫자를 천단위 콤마 포함 "원" 형식으로 포맷
+        function fmt(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '원';
+        }
+
+        // 텍스트에서 숫자만 추출
+        function parseAmount(str) {
+            return parseInt((str || '').replace(/[^\d]/g, '')) || 0;
+        }
+
+        // =============================================================
+        // 매장 기본정보 업데이트 (상권/평수 변경 시)
+        // =============================================================
+        function updateStoreInfo() {
+            const areaSelect = document.getElementById('store_area');
+            const area = parseInt(areaSelect.value);
+            const tables = CONFIG.tablesByArea[area];
+
+            // 테이블 수 표시
+            document.getElementById('table_count').textContent = tables + '개';
+
+            // 개설비용 항목 자동 업데이트
+            updateCostItems(area, tables);
+        }
+
+        // =============================================================
+        // 평수/테이블 수 변경에 따른 항목 자동 갱신
+        // =============================================================
+        function updateCostItems(area, tables) {
+            // 1. 인테리어 평수 및 단가 업데이트
+            document.getElementById('interior_area').value = area;
+            calculateInteriorRow();
+
+            // 2. 테이블 수량 초기화 (4인 기본, 6인 0개)
+            document.getElementById('table_4_qty').value = tables;
+            document.getElementById('table_6_qty').value = 0;
+            updateTableTotals(tables, 0);
+
+            // 3. 의자 수량 업데이트
+            updateChairQuantity();
+
+            // 4. 주방설비/집기 업데이트
+            updateKitchenByArea(area);
+
+            // 5. 화로세트 수량 (테이블 수)
+            const grillType = document.querySelector('input[name="grill_type"]:checked').value;
+            const grillPrice = grillType === 'table' ? CONFIG.화로세트_테이블형 : CONFIG.화로세트_착화식;
+            document.getElementById('grill_qty').value = tables;
+            document.getElementById('grill_qty').dataset.price = grillPrice;
+            document.getElementById('grill_total').textContent = fmt(grillPrice * tables);
+
+            // 6. 불판 수량: 테이블 수 × 3
+            document.getElementById('grill_plate_qty').value = tables * 3;
+            document.getElementById('total_plate').textContent = fmt(CONFIG.불판 * tables * 3);
+
+            // 7. 착화기 수량: 35평 이하 1대, 40평 이상 2대
+            const igniterQty = area <= 35 ? 1 : 2;
+            document.getElementById('igniter_qty').value = igniterQty;
+            document.getElementById('igniter_total').textContent = fmt(CONFIG.착화기 * igniterQty);
+
+            // 착화식로스터 선택 시 착화기 비활성
+            applyGrillTypeRules(grillType);
+
+            // 8. 덕트 수량: 평수 연동
+            const ductQtyEl = document.getElementById('duct_qty');
+            ductQtyEl.value = area;
+            document.getElementById('total_덕트').textContent = fmt(CONFIG.덕트 * area);
+
+            // 9. 별도공사 체크박스 디폴트 (평수별)
+            applyExtraDefaultsByArea(area);
+
+            // 10. 섹션 소계 및 총계 재계산
+            recalcGrillSubtotal();
+            recalcExtraSubtotal();
+            recalcFurnitureSubtotal();
+            calculateGrandTotal();
+        }
+
+        // =============================================================
+        // 주방설비/집기 평수별 업데이트
+        // =============================================================
+        function updateKitchenByArea(area) {
+            const equipmentTotal = CONFIG.equipmentByArea[area] || 0;
+            const fixtureTotal = CONFIG.fixtureByArea[area] || 0;
+
+            document.getElementById('equipment_area_label').textContent = area + '평';
+            document.getElementById('fixture_area_label').textContent = area + '평';
+
+            const cbEquipment = document.getElementById('cb_equipment');
+            const cbFixture = document.getElementById('cb_fixture');
+
+            document.getElementById('total_equipment').textContent = cbEquipment.checked ? fmt(equipmentTotal) : fmt(0);
+            document.getElementById('total_fixture').textContent = cbFixture.checked ? fmt(fixtureTotal) : fmt(0);
+
+            // 체크박스에 현재 평수값 저장 (체크 토글 시 사용)
+            cbEquipment.dataset.area = area;
+            cbFixture.dataset.area = area;
+
+            recalcKitchenSubtotal();
+        }
+
+        function calculateKitchenRow(type, checkbox) {
+            const area = parseInt(checkbox.dataset.area) || parseInt(document.getElementById('store_area').value);
+            if (type === 'equipment') {
+                const val = checkbox.checked ? (CONFIG.equipmentByArea[area] || 0) : 0;
+                document.getElementById('total_equipment').textContent = fmt(val);
+            } else {
+                const val = checkbox.checked ? (CONFIG.fixtureByArea[area] || 0) : 0;
+                document.getElementById('total_fixture').textContent = fmt(val);
+            }
+            recalcKitchenSubtotal();
+            calculateGrandTotal();
+        }
+
+        function recalcKitchenSubtotal() {
+            const eq = parseAmount(document.getElementById('total_equipment').textContent);
+            const fx = parseAmount(document.getElementById('total_fixture').textContent);
+            const total = eq + fx;
+            document.getElementById('subtotal_4').textContent = fmt(total);
+            document.getElementById('panel_subtotal_4').textContent = fmt(total);
+        }
+
+        // =============================================================
+        // 인테리어 행 계산
+        // =============================================================
+        function calculateInteriorRow() {
+            const area = parseInt(document.getElementById('interior_area').value) || 0;
+            const unitPrice = CONFIG.interiorPriceByArea[area] || CONFIG.interiorPriceByArea[40];
+            const total = unitPrice * area;
+
+            document.getElementById('interior_unit_price').textContent = fmt(unitPrice) + '/평';
+            document.getElementById('interior_total').textContent = fmt(total);
+
+            recalcInteriorSubtotal();
+            calculateGrandTotal();
+        }
+
+        function recalcInteriorSubtotal() {
+            const interior = parseAmount(document.getElementById('interior_total').textContent);
+            const signage = parseAmount(document.getElementById('signage_total').textContent);
+            const total = interior + signage;
+            document.getElementById('subtotal_2').textContent = fmt(total);
+            document.getElementById('panel_subtotal_2').textContent = fmt(total);
+        }
+
+        // =============================================================
+        // 단일 행 계산 (수량 × 단가)
+        // =============================================================
+        function calculateRow(input) {
+            const price = parseInt(input.dataset.price) || 0;
+            const qty = parseInt(input.value) || 0;
+            const total = price * qty;
+
+            // total-cell 아이디 매핑
+            const idMap = {
+                'signage_qty':        'signage_total',
+                'grill_plate_qty':    'total_plate',
+                'igniter_qty':        'igniter_total',
+                'direct_fire_qty':    'total_direct_fire',
+                'chair_qty':          'total_chair',
+                'booth_seat_qty':     'total_booth',
+                'counter_qty':        'total_counter',
+                'partition_wood_qty': 'total_partition_wood',
+                'partition_std_qty':  'total_partition_std',
+                'duct_qty':           'total_덕트',
+                'qty_에어컨40스탠드':  'total_에어컨40스탠드',
+                'qty_에어컨벽걸이':    'total_에어컨벽걸이',
+                'qty_에어컨80스탠드':  'total_에어컨80스탠드',
+                'qty_에어컨40시스템':  'total_에어컨40시스템',
+                'qty_철거':           'total_철거',
+                'qty_전기증설':       'total_전기증설',
+                'qty_전기배선':       'total_전기배선',
+                'qty_인조조경':       'total_인조조경',
+            };
+
+            const totalCellId = idMap[input.id];
+            if (totalCellId) {
+                const cell = document.getElementById(totalCellId);
+                if (cell) {
+                    cell.textContent = fmt(total);
+                    cell.style.color = total === 0 ? 'var(--text-light)' : '';
+                }
+            }
+
+            // 소속 섹션 소계 갱신
+            recalcAllSubtotals();
+            calculateGrandTotal();
+        }
+
+        // =============================================================
+        // 체크박스 행 계산 (본사비용)
+        // =============================================================
+        function calculateCheckboxRow(checkbox) {
+            const idToKey = {
+                'cb_가맹비':    '가맹비',
+                'cb_교육비':    '교육비',
+                'cb_물류보증금': '물류보증금',
+                'cb_실측도면':  '실측도면',
+                'cb_감리비':    '감리비',
+            };
+            const key = idToKey[checkbox.id];
+            const price = CONFIG[key] || 0;
+            const total = checkbox.checked ? price : 0;
+            const totalEl = document.getElementById('total_' + key);
+            if (totalEl) {
+                totalEl.textContent = fmt(total);
+                totalEl.style.color = total === 0 ? 'var(--text-light)' : '';
+                if (!checkbox.checked) {
+                    totalEl.style.textDecoration = key === '가맹비' ? 'line-through' : '';
+                } else {
+                    totalEl.style.textDecoration = '';
+                }
+            }
+            recalcHQSubtotal();
+            calculateGrandTotal();
+        }
+
+        function recalcHQSubtotal() {
+            const keys = ['가맹비', '교육비', '물류보증금', '실측도면', '감리비'];
+            let total = 0;
+            keys.forEach(k => {
+                total += parseAmount(document.getElementById('total_' + k).textContent);
+            });
+            document.getElementById('subtotal_1').textContent = fmt(total);
+            document.getElementById('panel_subtotal_1').textContent = fmt(total);
+        }
+
+        // =============================================================
+        // 4인/6인 테이블 연동 (합 = 기본 테이블 수 유지)
+        // =============================================================
+        function calculateTableChairSync(input) {
+            const area = parseInt(document.getElementById('store_area').value);
+            const baseTables = CONFIG.tablesByArea[area];
+
+            let t4 = parseInt(document.getElementById('table_4_qty').value) || 0;
+            let t6 = parseInt(document.getElementById('table_6_qty').value) || 0;
+
+            if (input.id === 'table_6_qty') {
+                t6 = parseInt(input.value) || 0;
+                t4 = Math.max(0, baseTables - t6);
+                document.getElementById('table_4_qty').value = t4;
+            } else if (input.id === 'table_4_qty') {
+                t4 = parseInt(input.value) || 0;
+                t6 = Math.max(0, baseTables - t4);
+                document.getElementById('table_6_qty').value = t6;
+            }
+
+            updateTableTotals(t4, t6);
+            updateChairQuantity();
+
+            // 화로세트/직화기 수량 연동
+            const totalTables = t4 + t6;
+            updateGrillByTableCount(totalTables);
+
+            recalcFurnitureSubtotal();
+            recalcGrillSubtotal();
+            calculateGrandTotal();
+        }
+
+        function updateTableTotals(t4, t6) {
+            document.getElementById('total_table4').textContent = fmt(CONFIG.테이블4인 * t4);
+            document.getElementById('total_table4').style.color = t4 === 0 ? 'var(--text-light)' : '';
+            document.getElementById('total_table6').textContent = fmt(CONFIG.테이블6인 * t6);
+            document.getElementById('total_table6').style.color = t6 === 0 ? 'var(--text-light)' : '';
+        }
+
+        function updateChairQuantity() {
+            const t4 = parseInt(document.getElementById('table_4_qty').value) || 0;
+            const t6 = parseInt(document.getElementById('table_6_qty').value) || 0;
+            const booth = parseInt(document.getElementById('booth_seat_qty').value) || 0;
+            const chairQty = Math.max(0, (t4 * 4) + (t6 * 6) - booth);
+            document.getElementById('chair_qty').value = chairQty;
+            document.getElementById('total_chair').textContent = fmt(CONFIG.의자 * chairQty);
+            document.getElementById('total_chair').style.color = chairQty === 0 ? 'var(--text-light)' : '';
+        }
+
+        function updateGrillByTableCount(totalTables) {
+            const grillType = document.querySelector('input[name="grill_type"]:checked').value;
+            const grillPrice = grillType === 'table' ? CONFIG.화로세트_테이블형 : CONFIG.화로세트_착화식;
+            document.getElementById('grill_qty').value = totalTables;
+            document.getElementById('grill_qty').dataset.price = grillPrice;
+            document.getElementById('grill_total').textContent = fmt(grillPrice * totalTables);
+            // 불판: 테이블 × 3
+            document.getElementById('grill_plate_qty').value = totalTables * 3;
+            document.getElementById('total_plate').textContent = fmt(CONFIG.불판 * totalTables * 3);
+        }
+
+        function recalcFurnitureSubtotal() {
+            const ids = [
+                'total_table4', 'total_table6', 'total_chair',
+                'total_booth', 'total_counter', 'total_partition_wood', 'total_partition_std'
+            ];
+            let total = 0;
+            ids.forEach(id => { total += parseAmount(document.getElementById(id).textContent); });
+            document.getElementById('subtotal_3').textContent = fmt(total);
+            document.getElementById('panel_subtotal_3').textContent = fmt(total);
+        }
+
+        // =============================================================
+        // 화로 유형 라디오 변경
+        // =============================================================
+        function calculateGrillSelection() {
+            const grillType = document.querySelector('input[name="grill_type"]:checked').value;
+            const tables = parseInt(document.getElementById('grill_qty').value) || 0;
+            applyGrillTypeRules(grillType, tables);
+            recalcGrillSubtotal();
+            calculateGrandTotal();
+        }
+
+        function applyGrillTypeRules(grillType, tables) {
+            const tableCount = tables !== undefined ? tables : (parseInt(document.getElementById('grill_qty').value) || 0);
+            const grillPrice = grillType === 'table' ? CONFIG.화로세트_테이블형 : CONFIG.화로세트_착화식;
+
+            document.getElementById('grill_unit_price').textContent = fmt(grillPrice);
+            document.getElementById('grill_qty').dataset.price = grillPrice;
+            document.getElementById('grill_total').textContent = fmt(grillPrice * tableCount);
+
+            const area = parseInt(document.getElementById('store_area').value);
+            const igniterEl = document.getElementById('igniter_qty');
+
+            if (grillType === 'electric') {
+                // 착화식로스터: 착화기 불필요
+                igniterEl.value = 0;
+                igniterEl.disabled = true;
+                document.getElementById('igniter_total').textContent = fmt(0);
+                document.getElementById('igniter_total').style.color = 'var(--text-light)';
+            } else {
+                // 테이블화로형: 착화기 필요 (평수별 수량)
+                const igniterQty = area <= 35 ? 1 : 2;
+                igniterEl.disabled = false;
+                igniterEl.value = igniterQty;
+                const igniterTotal = CONFIG.착화기 * igniterQty;
+                document.getElementById('igniter_total').textContent = fmt(igniterTotal);
+                document.getElementById('igniter_total').style.color = '';
+            }
+        }
+
+        // 화로 수량 직접 변경 시
+        function calculateGrillQtyChange() {
+            const grillType = document.querySelector('input[name="grill_type"]:checked').value;
+            const grillPrice = grillType === 'table' ? CONFIG.화로세트_테이블형 : CONFIG.화로세트_착화식;
+            const qty = parseInt(document.getElementById('grill_qty').value) || 0;
+            document.getElementById('grill_total').textContent = fmt(grillPrice * qty);
+            // 불판도 연동
+            document.getElementById('grill_plate_qty').value = qty * 3;
+            document.getElementById('total_plate').textContent = fmt(CONFIG.불판 * qty * 3);
+            recalcGrillSubtotal();
+            calculateGrandTotal();
+        }
+
+        function recalcGrillSubtotal() {
+            const ids = ['grill_total', 'total_plate', 'igniter_total', 'total_direct_fire'];
+            let total = 0;
+            ids.forEach(id => { total += parseAmount(document.getElementById(id).textContent); });
+            document.getElementById('subtotal_5').textContent = fmt(total);
+            document.getElementById('panel_subtotal_5').textContent = fmt(total);
+        }
+
+        // =============================================================
+        // 별도공사 - 체크박스 토글
+        // =============================================================
+
+        // 체크박스별 고정 금액 정의 (수량 입력 없는 고정 항목)
+        const EXTRA_FIXED = {
+            '에어컨시공':   3000000,    // 시공비(600,000 × 3) + 배관비(40,000 × 30) 합산
+            '음향':         900000,     // 스피커(100,000 × 4) + 엠프(200,000) + 시공비(300,000)
+            '디자인물':     CONFIG.디자인물,
+            '주방신설':     CONFIG.주방신설,
+            '도시가스':     CONFIG.도시가스,
+            '화장실':       CONFIG.화장실,
+            '소방전기':     CONFIG.소방전기,
+            '한전불입금':   CONFIG.한전불입금,
+            '소방필증':     CONFIG.소방필증,
+            '소방완비':     CONFIG.소방완비,
+        };
+
+        // 수량 입력 항목의 체크박스 (토글 시 수량 활성/비활성)
+        const EXTRA_QTY_MAP = {
+            '덕트':           'duct_qty',
+            '에어컨40스탠드': 'qty_에어컨40스탠드',
+            '에어컨벽걸이':   'qty_에어컨벽걸이',
+            '에어컨80스탠드': 'qty_에어컨80스탠드',
+            '에어컨40시스템': 'qty_에어컨40시스템',
+            '철거':           'qty_철거',
+            '전기증설':       'qty_전기증설',
+            '전기배선':       'qty_전기배선',
+            '인조조경':       'qty_인조조경',
+        };
+
+        function toggleExtraRow(checkbox) {
+            // cb_XXX → XXX 키 추출
+            const key = checkbox.id.replace('cb_', '');
+            const totalEl = document.getElementById('total_' + key);
+
+            if (key in EXTRA_FIXED) {
+                // 고정금액 항목
+                const val = checkbox.checked ? EXTRA_FIXED[key] : 0;
+                if (totalEl) {
+                    totalEl.textContent = fmt(val);
+                    totalEl.style.color = val === 0 ? 'var(--text-light)' : '';
+                }
+            } else if (key in EXTRA_QTY_MAP) {
+                // 수량 입력 항목
+                const qtyEl = document.getElementById(EXTRA_QTY_MAP[key]);
+                if (checkbox.checked) {
+                    qtyEl.disabled = false;
+                    if (parseInt(qtyEl.value) === 0) qtyEl.value = 1;
+                    // 덕트는 평수로 복원
+                    if (key === '덕트') {
+                        const area = parseInt(document.getElementById('store_area').value);
+                        qtyEl.value = area;
+                    }
+                } else {
+                    qtyEl.disabled = true;
+                    qtyEl.value = 0;
+                }
+                if (qtyEl) {
+                    const price = parseInt(qtyEl.dataset.price) || 0;
+                    const qty = parseInt(qtyEl.value) || 0;
+                    const val = price * qty;
+                    if (totalEl) {
+                        totalEl.textContent = fmt(val);
+                        totalEl.style.color = val === 0 ? 'var(--text-light)' : '';
+                    }
+                }
+            } else if (key === '단지') {
+                // 단지는 라디오 선택값 반영
+                if (checkbox.checked) {
+                    const selected = document.querySelector('input[name="danji"]:checked');
+                    const price = selected.value === '1' ? CONFIG.단지1대 : CONFIG.단지2대;
+                    if (totalEl) {
+                        totalEl.textContent = fmt(price);
+                        totalEl.style.color = '';
+                    }
+                } else {
+                    if (totalEl) {
+                        totalEl.textContent = fmt(0);
+                        totalEl.style.color = 'var(--text-light)';
+                    }
+                }
+            }
+
+            recalcExtraSubtotal();
+            calculateGrandTotal();
+        }
+
+        // 단지 라디오 변경
+        function calculateDanjiSelection() {
+            const selected = document.querySelector('input[name="danji"]:checked');
+            const price = selected.value === '1' ? CONFIG.단지1대 : CONFIG.단지2대;
+            document.getElementById('danji_unit_price').textContent = fmt(price);
+            const cb = document.getElementById('cb_단지');
+            document.getElementById('total_단지').textContent = cb.checked ? fmt(price) : fmt(0);
+            document.getElementById('total_단지').style.color = cb.checked ? '' : 'var(--text-light)';
+            recalcExtraSubtotal();
+            calculateGrandTotal();
+        }
+
+        function recalcExtraSubtotal() {
+            // 기본 항목 합산
+            const basicIds = [
+                'total_덕트', 'total_단지', 'total_에어컨40스탠드', 'total_에어컨벽걸이',
+                'total_에어컨시공', 'total_음향', 'total_디자인물'
+            ];
+            // 추가 항목 합산
+            const extraIds = [
+                'total_주방신설', 'total_도시가스', 'total_철거', 'total_화장실',
+                'total_소방전기', 'total_에어컨80스탠드', 'total_에어컨40시스템',
+                'total_전기증설', 'total_전기배선', 'total_한전불입금',
+                'total_소방필증', 'total_소방완비', 'total_인조조경'
+            ];
+            let total = 0;
+            [...basicIds, ...extraIds].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) total += parseAmount(el.textContent);
+            });
+            document.getElementById('subtotal_6').textContent = fmt(total);
+            document.getElementById('panel_subtotal_6').textContent = fmt(total);
+        }
+
+        // =============================================================
+        // 평수별 별도공사 체크박스 디폴트 적용
+        // =============================================================
+        function applyExtraDefaultsByArea(area) {
+            // 모든 별도공사 체크박스 상태 리셋 후 재적용
+            const allExtraCbs = document.querySelectorAll('.extra-cb');
+
+            // 기본 체크 항목 (모든 평수 공통)
+            const alwaysChecked = ['cb_덕트', 'cb_단지', 'cb_에어컨40스탠드', 'cb_에어컨벽걸이', 'cb_에어컨시공', 'cb_음향', 'cb_디자인물'];
+            // 추가 체크 항목 (평수별)
+            const checkedByArea = {
+                30: [],
+                35: [],
+                40: ['cb_주방신설', 'cb_도시가스'],
+                45: ['cb_주방신설', 'cb_도시가스'],
+                50: ['cb_주방신설', 'cb_도시가스', 'cb_화장실', 'cb_소방전기'],
+                60: ['cb_주방신설', 'cb_도시가스', 'cb_화장실', 'cb_소방전기'],
+                70: ['cb_주방신설', 'cb_도시가스', 'cb_화장실', 'cb_소방전기'],
+            };
+            const extraChecked = checkedByArea[area] || [];
+
+            allExtraCbs.forEach(cb => {
+                const shouldCheck = alwaysChecked.includes(cb.id) || extraChecked.includes(cb.id);
+                cb.checked = shouldCheck;
+                // disabled 상태 처리 (수량 입력 항목)
+                const key = cb.id.replace('cb_', '');
+                if (key in EXTRA_QTY_MAP) {
+                    const qtyEl = document.getElementById(EXTRA_QTY_MAP[key]);
+                    if (qtyEl) qtyEl.disabled = !shouldCheck;
+                }
+            });
+
+            // 평수 연동 수량 초기화
+            const ductQtyEl = document.getElementById('duct_qty');
+            ductQtyEl.value = area;
+            document.getElementById('total_덕트').textContent = fmt(CONFIG.덕트 * area);
+            document.getElementById('total_덕트').style.color = '';
+
+            // 에어컨 기본값 초기화
+            const ac40El = document.getElementById('qty_에어컨40스탠드');
+            ac40El.disabled = false;
+            ac40El.value = 2;
+            document.getElementById('total_에어컨40스탠드').textContent = fmt(CONFIG.에어컨_40평스탠드 * 2);
+            document.getElementById('total_에어컨40스탠드').style.color = '';
+
+            const acWallEl = document.getElementById('qty_에어컨벽걸이');
+            acWallEl.disabled = false;
+            acWallEl.value = 1;
+            document.getElementById('total_에어컨벽걸이').textContent = fmt(CONFIG.에어컨_벽걸이6평 * 1);
+            document.getElementById('total_에어컨벽걸이').style.color = '';
+
+            // 고정 항목 금액 적용
+            const fixedDefaults = {
+                '에어컨시공': 3000000,
+                '음향': 900000,
+                '디자인물': CONFIG.디자인물,
+            };
+            Object.entries(fixedDefaults).forEach(([key, val]) => {
+                const cb = document.getElementById('cb_' + key);
+                const el = document.getElementById('total_' + key);
+                if (el) {
+                    el.textContent = (cb && cb.checked) ? fmt(val) : fmt(0);
+                    el.style.color = (cb && cb.checked) ? '' : 'var(--text-light)';
+                }
+            });
+
+            // 단지 금액
+            const danjiCb = document.getElementById('cb_단지');
+            const danjiSel = document.querySelector('input[name="danji"]:checked');
+            const danjiPrice = danjiSel && danjiSel.value === '2' ? CONFIG.단지2대 : CONFIG.단지1대;
+            document.getElementById('total_단지').textContent = danjiCb.checked ? fmt(danjiPrice) : fmt(0);
+            document.getElementById('total_단지').style.color = danjiCb.checked ? '' : 'var(--text-light)';
+
+            // 추가 항목 금액 초기화
+            const extraFixedMap = {
+                '주방신설': CONFIG.주방신설,
+                '도시가스': CONFIG.도시가스,
+                '화장실': CONFIG.화장실,
+                '소방전기': CONFIG.소방전기,
+            };
+            Object.entries(extraFixedMap).forEach(([key, price]) => {
+                const cb = document.getElementById('cb_' + key);
+                const el = document.getElementById('total_' + key);
+                if (el) {
+                    el.textContent = (cb && cb.checked) ? fmt(price) : fmt(0);
+                    el.style.color = (cb && cb.checked) ? '' : 'var(--text-light)';
+                }
+            });
+
+            // 철거, 에어컨80/40시스템, 전기증설/배선, 한전불입금, 소방필증/완비, 인조조경 → 모두 0
+            const zeroIds = [
+                'total_철거', 'total_에어컨80스탠드', 'total_에어컨40시스템',
+                'total_전기증설', 'total_전기배선', 'total_한전불입금',
+                'total_소방필증', 'total_소방완비', 'total_인조조경'
+            ];
+            const zeroQtyIds = [
+                'qty_철거', 'qty_에어컨80스탠드', 'qty_에어컨40시스템',
+                'qty_전기증설', 'qty_전기배선', 'qty_인조조경'
+            ];
+            zeroIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) { el.textContent = fmt(0); el.style.color = 'var(--text-light)'; }
+            });
+            zeroQtyIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) { el.value = 0; el.disabled = true; }
+            });
+        }
+
+        // =============================================================
+        // 전체 소계 재계산
+        // =============================================================
+        function recalcAllSubtotals() {
+            recalcHQSubtotal();
+            recalcInteriorSubtotal();
+            recalcFurnitureSubtotal();
+            recalcKitchenSubtotal();
+            recalcGrillSubtotal();
+            recalcExtraSubtotal();
+        }
+
+        // =============================================================
+        // 총합 계산 및 sticky 패널 업데이트
+        // =============================================================
+        function calculateGrandTotal() {
+            const subtotals = [
+                parseAmount(document.getElementById('subtotal_1').textContent),
+                parseAmount(document.getElementById('subtotal_2').textContent),
+                parseAmount(document.getElementById('subtotal_3').textContent),
+                parseAmount(document.getElementById('subtotal_4').textContent),
+                parseAmount(document.getElementById('subtotal_5').textContent),
+                parseAmount(document.getElementById('subtotal_6').textContent),
+            ];
+            const grand = subtotals.reduce((a, b) => a + b, 0);
+
+            document.getElementById('grand_total_display').textContent = fmt(grand);
+            document.getElementById('grand_total_panel').textContent = fmt(grand);
+
+            // 섹션 헤더 소계 동기화
+            document.getElementById('subtotal_display_1').textContent = fmt(subtotals[0]);
+            document.getElementById('subtotal_display_2').textContent = fmt(subtotals[1]);
+            document.getElementById('subtotal_display_3').textContent = fmt(subtotals[2]);
+            document.getElementById('subtotal_display_4').textContent = fmt(subtotals[3]);
+            document.getElementById('subtotal_display_5').textContent = fmt(subtotals[4]);
+            document.getElementById('subtotal_display_6').textContent = fmt(subtotals[5]);
+        }
+
+        // =============================================================
+        // 아코디언 토글
+        // =============================================================
+        function toggleAccordion() {
+            const btn = document.getElementById('accordion-btn');
+            const body = document.getElementById('accordion-body');
+            btn.classList.toggle('open');
+            body.classList.toggle('open');
+        }
+
+        // =============================================================
+        // 초기화
+        // =============================================================
+        window.onload = function () {
+            updateStoreInfo();
+        };
+    </script>
+
+</body>
+</html>
