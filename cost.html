@@ -1945,6 +1945,29 @@
         // =============================================================
         window.onload = function () {
             syncDataPrices();
+
+            // 본사비용 체크박스 행 초기화 (체크 상태에 따라 합계 반영)
+            document.querySelectorAll('.item-checkbox').forEach(function (cb) {
+                const row = cb.closest('tr');
+                if (!row) return;
+                const totalEl = row.querySelector('.total-cell');
+                if (!totalEl) return;
+                const priceEl = row.querySelector('input[type="number"]');
+                const dataPrice = priceEl ? parseInt(priceEl.dataset.price) || 0 : 0;
+                const qty = priceEl ? (parseInt(priceEl.value) || 0) : 1;
+                if (cb.checked) {
+                    totalEl.textContent = fmt(dataPrice * qty);
+                    totalEl.style.color = '';
+                } else {
+                    totalEl.textContent = fmt(0);
+                    totalEl.style.color = 'var(--text-light)';
+                }
+            });
+
+            // 모든 섹션 소계 재계산
+            recalcHQSubtotal();
+
+            // 평수 기반 전체 업데이트
             updateStoreInfo();
         };
     </script>
