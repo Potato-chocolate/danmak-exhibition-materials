@@ -708,8 +708,8 @@
                 grid-template-columns: 1fr;
                 gap: 16px;
                 padding: 16px 0;
-                /* 하단 고정 바 높이만큼 여백 확보 */
-                padding-bottom: 80px;
+                /* 하단 고정 바(순수익+수익률) 높이만큼 여백 확보 */
+                padding-bottom: 200px;
             }
 
             /* 결과 컬럼: sticky 해제 */
@@ -774,90 +774,47 @@
             .profit-card.net-profit {
                 position: fixed;
                 bottom: 0;
+                top: auto;
                 left: 0;
                 right: 0;
                 z-index: 1000;
                 grid-column: unset;
-                border-radius: 0;
-                padding: 0;
+                border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+                padding: 16px 20px 0;
                 margin: 0;
-                min-height: 64px;
-                cursor: pointer;
-                /* 기존 hover 효과 제거 */
+                min-height: auto;
+                cursor: default;
                 transform: none !important;
+                box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
             }
             .profit-card.net-profit:hover {
                 transform: none;
-                box-shadow: none;
+                box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
             }
-            /* compact 모드: 한 줄 표시 */
             .profit-card.net-profit .card-label {
-                display: none;
+                display: block;
+                font-size: 0.8rem;
             }
             .profit-card.net-profit .card-amount {
-                font-size: 1.4rem;
-                margin: 0;
-                line-height: 1.2;
+                font-size: 1.6rem;
+                margin: 4px 0 10px;
             }
             .profit-card.net-profit .card-percent {
-                margin: 0;
-                padding: 0 16px;
-                background: transparent;
-                animation: none;
+                margin: 0 -20px;
+                padding: 10px 20px;
+                background: linear-gradient(135deg, #B8905B 0%, #D4B078 100%);
+                animation: subtleShine 6s ease-in-out infinite;
                 flex-direction: row;
                 align-items: center;
-                justify-content: space-between;
-                min-height: 64px;
+                justify-content: center;
+                min-height: auto;
             }
             .profit-card.net-profit .card-percent .percent-text {
-                font-size: 0.75rem;
-                color: rgba(255,255,255,0.75);
-                order: -1;
+                font-size: 0.8rem;
+                color: rgba(255,255,255,0.85);
             }
             .profit-card.net-profit .card-percent .percent-num {
-                font-size: 1.3rem;
-            }
-            /* 순수익 금액을 card-percent 안에 배치 (펼침 전 compact) */
-            .profit-card.net-profit .card-amount {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                font-size: 1.25rem;
-                margin: 0;
-            }
-            /* 펼침 모드 */
-            .profit-card.net-profit.mobile-expanded {
-                max-height: 60vh;
-                overflow-y: auto;
-                padding: 20px 20px 0;
-                min-height: auto;
-                border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-            }
-            .profit-card.net-profit.mobile-expanded .card-label {
-                display: block;
-            }
-            .profit-card.net-profit.mobile-expanded .card-amount {
-                position: static;
-                transform: none;
-                font-size: 2rem;
-                margin: 8px 0 16px;
-            }
-            .profit-card.net-profit.mobile-expanded .card-percent {
-                min-height: auto;
-                padding: 14px 20px;
-                margin: 0 -20px;
-                background: linear-gradient(135deg, #B8905B 0%, #D4B078 100%);
-                justify-content: center;
-                animation: subtleShine 6s ease-in-out infinite;
-            }
-            .profit-card.net-profit.mobile-expanded .card-percent .percent-text {
-                order: 0;
-                color: rgba(255,255,255,0.85);
-                font-size: 0.85rem;
-            }
-            .profit-card.net-profit.mobile-expanded .card-percent .percent-num {
-                font-size: 1.8rem;
+                font-size: 1.5rem;
             }
 
             /* 비용 분석 */
@@ -1060,7 +1017,7 @@
                         <div class="card-amount" id="profit_expense">-</div>
                         <div class="card-percent" id="expense_percentage">-</div>
                     </div>
-                    <div class="profit-card net-profit" onclick="toggleMobileResult()">
+                    <div class="profit-card net-profit">
                         <div class="card-label">예상 순수익</div>
                         <div class="card-amount" id="net_profit">-</div>
                         <div class="card-percent">
