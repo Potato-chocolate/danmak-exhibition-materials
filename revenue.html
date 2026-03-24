@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>단막 프랜차이즈 매출 시뮬레이션 v2</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -709,7 +709,7 @@
                 gap: 16px;
                 padding: 16px 0;
                 /* 하단 고정 바(순수익+수익률) 높이만큼 여백 확보 */
-                padding-bottom: 320px;
+                padding-bottom: calc(160px + env(safe-area-inset-bottom, 0px));
             }
 
             /* 결과 컬럼: sticky 해제 */
@@ -760,8 +760,11 @@
 
             /* 수익 요약 카드 */
             .profit-cards {
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns: 1fr;
                 gap: 10px;
+            }
+            .profit-card .card-amount {
+                font-size: 1.1rem;
             }
             .profit-card {
                 padding: 14px 12px;
@@ -802,6 +805,7 @@
             .profit-card.net-profit .card-percent {
                 margin: 0 -20px;
                 padding: 10px 20px;
+                padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
                 background: linear-gradient(135deg, #B8905B 0%, #D4B078 100%);
                 animation: subtleShine 6s ease-in-out infinite;
                 flex-direction: row;
@@ -867,7 +871,7 @@
             .ref-tables {
                 grid-template-columns: 1fr;
                 gap: 12px;
-                padding-bottom: 200px;
+                padding-bottom: calc(160px + env(safe-area-inset-bottom, 0px));
             }
             .ref-table {
                 font-size: 0.8rem;
@@ -885,6 +889,43 @@
             .info-card {
                 padding: 12px;
                 gap: 10px;
+            }
+
+            /* P2-2: category-right 360px 텍스트 충돌 방지 */
+            .category-amount {
+                font-size: 0.82rem;
+            }
+            .category-percent {
+                font-size: 0.72rem;
+                min-width: 35px;
+            }
+            .category-header {
+                gap: 4px;
+            }
+
+            /* P2-3: 홈 버튼 360px 겹침 방지 */
+            .header {
+                padding-right: 80px;
+                text-align: left;
+            }
+            .header h1 {
+                font-size: 1.15rem;
+            }
+
+            /* P2-4: detail-table 360px 가독성 */
+            .detail-table td:first-child {
+                padding-left: 16px;
+                font-size: 0.78rem;
+            }
+            .detail-sublabel {
+                font-size: 0.65rem;
+            }
+
+            /* P3-1: hover 효과 모바일 제거 */
+            .result-card:hover,
+            .ref-table-card:hover {
+                transform: none;
+                box-shadow: none;
             }
         }
     </style>
@@ -1036,7 +1077,7 @@
         <div class="cost-analysis" style="margin-bottom: 20px;">
             <div class="analysis-header">
                 <h2>월간 비용 상세 분석</h2>
-                <p>각 항목을 클릭하면 세부 내역을 확인할 수 있습니다</p>
+                <p>각 항목을 터치하면 세부 내역을 확인할 수 있습니다</p>
             </div>
             <div class="analysis-content">
 
@@ -1672,6 +1713,16 @@
             setEl('ratio_royalty',            toP(cr.로열티));
             setEl('ratio_advertising',        toP(cr.홍보비));
             setEl('ratio_insurance4',         '직원급여의 ' + toP(CONFIG.insuranceRate));
+
+            // 적자 시 순수익 바 색상 변경
+            const netProfitCard = document.querySelector('.profit-card.net-profit');
+            if (netProfitCard) {
+                if (netProfit < 0) {
+                    netProfitCard.style.background = 'linear-gradient(135deg, #8B2500, #A0522D)';
+                } else {
+                    netProfitCard.style.background = '';
+                }
+            }
         }
 
         /**
@@ -1692,16 +1743,6 @@
         function toggleCategory(btn) {
             btn.classList.toggle('open');
             btn.nextElementSibling.classList.toggle('open');
-        }
-
-        /**
-         * 모바일 하단 고정 순수익 바 펼침/접힘 토글
-         */
-        function toggleMobileResult() {
-            const netProfitCard = document.querySelector('.profit-card.net-profit');
-            if (netProfitCard) {
-                netProfitCard.classList.toggle('mobile-expanded');
-            }
         }
 
         /**
