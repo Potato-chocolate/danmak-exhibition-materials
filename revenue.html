@@ -1056,14 +1056,19 @@
                     <div class="category-details">
                         <table class="detail-table">
                             <tr>
-                                <td>카드수수료<span class="detail-sublabel" id="card_fee_sublabel">카드매출(95%) x 1.1%</span></td>
-                                <td id="misc_card_fee">-</td>
-                                <td id="misc_card_fee_percent">-</td>
-                            </tr>
-                            <tr>
                                 <td>로열티</td>
                                 <td id="misc_royalty">-</td>
                                 <td id="ratio_royalty">2.2%</td>
+                            </tr>
+                            <tr>
+                                <td>단지렌탈<span class="detail-sublabel" id="danji_rental_sublabel">1대 x 11만원</span></td>
+                                <td id="misc_danji_rental">-</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>카드수수료<span class="detail-sublabel" id="card_fee_sublabel">카드매출(95%) x 1.1%</span></td>
+                                <td id="misc_card_fee">-</td>
+                                <td id="misc_card_fee_percent">-</td>
                             </tr>
                             <tr>
                                 <td>홍보비</td>
@@ -1323,9 +1328,11 @@
             const cardFeeRate  = annualSales >= CONFIG.카드수수료_경계연매출 ? CONFIG.cardFeeOver10억 : CONFIG.cardFeeUnder10억;
             const cardFee      = Math.round(monthlySales * CONFIG.cardRatio * cardFeeRate);
             const royalty      = Math.round(monthlySales * cr.로열티);
+            const danjiCount   = area < CONFIG.단지렌탈_경계평수 ? 1 : 2;
+            const danjiRental  = CONFIG.단지렌탈_1대 * danjiCount;
             const advertising  = Math.round(monthlySales * cr.홍보비);
             const welfare      = CONFIG.복리후생비;
-            const miscCosts    = cardFee + royalty + advertising + welfare;
+            const miscCosts    = cardFee + royalty + danjiRental + advertising + welfare;
 
             // 총계
             const totalExpense = totalFixed + totalLabor + foodCosts + beverageCosts + utilityCosts + materialCosts + miscCosts;
@@ -1401,6 +1408,8 @@
             document.getElementById('misc_card_fee').textContent      = fmt(cardFee);
             document.getElementById('misc_card_fee_percent').textContent= pct(cardFee, monthlySales);
             document.getElementById('misc_royalty').textContent       = fmt(royalty);
+            document.getElementById('misc_danji_rental').textContent  = fmt(danjiRental);
+            document.getElementById('danji_rental_sublabel').textContent = danjiCount + '대 x 11만원';
             document.getElementById('misc_advertising').textContent   = fmt(advertising);
             document.getElementById('misc_welfare').textContent       = fmt(welfare);
 
