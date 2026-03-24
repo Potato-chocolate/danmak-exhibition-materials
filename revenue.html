@@ -650,9 +650,35 @@
             .category-details { max-height: none !important; display: block !important; }
             .cost-category { page-break-inside: avoid; }
         }
+        /* ===== 홈 버튼 ===== */
+        .home-btn {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            width: 80px;
+            height: 40px;
+            background: var(--brand-dark);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            z-index: 9999;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: background 0.2s;
+        }
+        .home-btn:hover { background: var(--brand-primary); }
     </style>
 </head>
 <body>
+
+    <a class="home-btn" href="index.html">메인</a>
 
     <!-- 헤더 -->
     <div class="header">

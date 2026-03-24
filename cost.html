@@ -530,9 +530,35 @@
             .cost-section { page-break-inside: avoid; }
             .header { background: white; color: var(--text-main); border-bottom: 3px solid var(--brand-primary); }
         }
+        /* ===== 홈 버튼 ===== */
+        .home-btn {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            width: 80px;
+            height: 40px;
+            background: var(--brand-dark);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            z-index: 9999;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: background 0.2s;
+        }
+        .home-btn:hover { background: var(--brand-primary); }
     </style>
 </head>
 <body>
+
+    <a class="home-btn" href="index.html">메인</a>
 
     <!-- 헤더 -->
     <div class="header">
@@ -780,7 +806,7 @@
                             <td></td>
                             <td class="price">187,000원</td>
                             <td style="text-align:center">
-                                <input type="number" class="qty-input" id="booth_seat_qty" value="0" min="0" data-price="187000" onchange="calculateRow(this)">
+                                <input type="number" class="qty-input" id="booth_seat_qty" value="0" min="0" step="2" data-price="187000" onchange="calculateBoothChairSync(this)">
                             </td>
                             <td class="total-cell" id="total_booth" style="color:var(--text-light)">0원</td>
                         </tr>
@@ -1539,18 +1565,20 @@
         // =============================================================
         function calculateTableChairSync(input) {
             const area = parseInt(document.getElementById('store_area').value);
-            const baseTables = CONFIG.tablesByArea[area];
+            const baseTables = CONFIG.tablesByArea[area] || 16;
 
             let t4 = parseInt(document.getElementById('table_4_qty').value) || 0;
             let t6 = parseInt(document.getElementById('table_6_qty').value) || 0;
 
             if (input.id === 'table_6_qty') {
-                t6 = parseInt(input.value) || 0;
-                t4 = Math.max(0, baseTables - t6);
+                t6 = Math.min(Math.max(0, parseInt(input.value) || 0), baseTables);
+                input.value = t6;
+                t4 = baseTables - t6;
                 document.getElementById('table_4_qty').value = t4;
             } else if (input.id === 'table_4_qty') {
-                t4 = parseInt(input.value) || 0;
-                t6 = Math.max(0, baseTables - t4);
+                t4 = Math.min(Math.max(0, parseInt(input.value) || 0), baseTables);
+                input.value = t4;
+                t6 = baseTables - t4;
                 document.getElementById('table_6_qty').value = t6;
             }
 
@@ -1577,10 +1605,32 @@
             const t4 = parseInt(document.getElementById('table_4_qty').value) || 0;
             const t6 = parseInt(document.getElementById('table_6_qty').value) || 0;
             const booth = parseInt(document.getElementById('booth_seat_qty').value) || 0;
-            const chairQty = Math.max(0, (t4 * CONFIG.좌석수_4인) + (t6 * CONFIG.좌석수_6인) - booth);
+            const totalSeats = (t4 * CONFIG.좌석수_4인) + (t6 * CONFIG.좌석수_6인);
+            const chairQty = Math.max(0, totalSeats - (booth * 2));
             document.getElementById('chair_qty').value = chairQty;
             document.getElementById('total_chair').textContent = fmt(CONFIG.의자 * chairQty);
             document.getElementById('total_chair').style.color = chairQty === 0 ? 'var(--text-light)' : '';
+        }
+
+        // 붙박이석 ↔ 의자 연동 (붙박이석 1석 = 2인, step=2, 의자 2개씩 감소)
+        function calculateBoothChairSync(input) {
+            const t4 = parseInt(document.getElementById('table_4_qty').value) || 0;
+            const t6 = parseInt(document.getElementById('table_6_qty').value) || 0;
+            const totalSeats = (t4 * CONFIG.좌석수_4인) + (t6 * CONFIG.좌석수_6인);
+            let booth = parseInt(input.value) || 0;
+            // 짝수로 보정
+            booth = Math.round(booth / 2) * 2;
+            // 최대: 의자가 0 이하로 안 내려가도록
+            const maxBooth = Math.floor(totalSeats / 2);
+            booth = Math.min(Math.max(0, booth), maxBooth);
+            input.value = booth;
+            // 붙박이석 금액 업데이트
+            document.getElementById('total_booth').textContent = fmt(CONFIG.붙박이석 * booth);
+            document.getElementById('total_booth').style.color = booth === 0 ? 'var(--text-light)' : '';
+            // 의자 수량 연동
+            updateChairQuantity();
+            recalcFurnitureSubtotal();
+            calculateGrandTotal();
         }
 
         function updateGrillByTableCount(totalTables) {
