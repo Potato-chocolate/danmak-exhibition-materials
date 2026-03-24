@@ -488,11 +488,13 @@
         @media (max-width: 1024px) {
             .main-layout {
                 grid-template-columns: 1fr;
+                max-width: 100%;
                 padding: 20px;
             }
             .summary-panel {
                 position: fixed;
                 bottom: 0;
+                top: auto;
                 left: 0;
                 right: 0;
                 border-radius: var(--radius-lg) var(--radius-lg) 0 0;
@@ -560,14 +562,21 @@
             /* 레이아웃 */
             .main-layout {
                 grid-template-columns: 1fr;
+                max-width: 100%;
                 padding: 16px 12px;
             }
+            .cost-sections { width: 100%; }
             .store-info-bar {
                 padding: 12px;
             }
             .store-info-grid {
-                flex-wrap: wrap;
-                gap: 8px;
+                flex-wrap: nowrap;
+                gap: 6px;
+                font-size: 0.85rem;
+            }
+            .store-info-grid .info-select {
+                min-width: 0;
+                flex-shrink: 1;
             }
 
             /* 헤더 */
@@ -642,6 +651,7 @@
             .summary-panel {
                 position: fixed;
                 bottom: 0;
+                top: auto;
                 left: 0;
                 right: 0;
                 z-index: 1000;
