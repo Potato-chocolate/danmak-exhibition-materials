@@ -1594,6 +1594,11 @@
             // 착화식로스터 선택 시 착화기 비활성
             applyGrillTypeRules(grillType);
 
+            // 7-2. 직화기 수량: 테이블 수와 동일
+            document.getElementById('direct_fire_qty').value = tables;
+            document.getElementById('total_direct_fire').textContent = fmt(CONFIG.직화기 * tables);
+            document.getElementById('total_direct_fire').style.color = tables === 0 ? 'var(--text-light)' : '';
+
             // 8. 덕트 수량: 평수 연동
             const ductQtyEl = document.getElementById('duct_qty');
             ductQtyEl.value = area;
