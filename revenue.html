@@ -1110,7 +1110,7 @@
                                 <td id="rent_percent">-</td>
                             </tr>
                             <tr>
-                                <td>포스 비용<span class="detail-sublabel">테이블오더 + 메인포스 (VAT포함)</span></td>
+                                <td>포스 비용<span class="detail-sublabel" id="pos_sublabel">테이블오더 + 메인포스 (VAT포함)</span></td>
                                 <td id="pos_cost_display">-</td>
                                 <td id="pos_cost_percent">-</td>
                             </tr>
@@ -1600,6 +1600,7 @@
             document.getElementById('rent_percent').textContent       = pct(monthlyRent, monthlySales);
             document.getElementById('pos_cost_display').textContent   = fmt(posCost);
             document.getElementById('pos_cost_percent').textContent   = pct(posCost, monthlySales);
+            document.getElementById('pos_sublabel').textContent       = (tableCount + 1) + '대 (테이블 ' + tableCount + ' + 메인 1)';
             document.getElementById('catch_table_display').textContent= fmt(catchTableAmt);
             document.getElementById('security_display').textContent   = fmt(fc.보안);
             document.getElementById('internet_display').textContent   = fmt(fc.인터넷);
