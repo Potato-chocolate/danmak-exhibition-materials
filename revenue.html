@@ -1551,6 +1551,7 @@
             const totalLabor  = staffSalary + insurance4 + ptSalary;
 
             // 포스 및 고정비
+            const tableCount    = CONFIG.tablesByArea[area] || 16;
             const posCost       = getPosCost(tableCount);
             const fc            = CONFIG.fixedCosts;
             const catchTableOn  = document.getElementById('cb_catchTable').checked;
