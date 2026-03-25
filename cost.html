@@ -2011,17 +2011,17 @@
             // 모든 별도공사 체크박스 상태 리셋 후 재적용
             const allExtraCbs = document.querySelectorAll('.extra-cb');
 
-            // 기본 체크 항목 (모든 평수 공통)
-            const alwaysChecked = ['cb_덕트', 'cb_단지', 'cb_에어컨40스탠드', 'cb_에어컨벽걸이', 'cb_에어컨시공', 'cb_음향', 'cb_디자인물'];
-            // 추가 체크 항목 (평수별)
+            // 기본 체크 항목 (없음 — 별도공사는 전부 선택 해제)
+            const alwaysChecked = [];
+            // 추가 체크 항목 (평수별 — 없음)
             const checkedByArea = {
                 30: [],
                 35: [],
-                40: ['cb_주방신설', 'cb_도시가스'],
-                45: ['cb_주방신설', 'cb_도시가스'],
-                50: ['cb_주방신설', 'cb_도시가스', 'cb_화장실', 'cb_소방전기'],
-                60: ['cb_주방신설', 'cb_도시가스', 'cb_화장실', 'cb_소방전기'],
-                70: ['cb_주방신설', 'cb_도시가스', 'cb_화장실', 'cb_소방전기'],
+                40: [],
+                45: [],
+                50: [],
+                60: [],
+                70: [],
             };
             const extraChecked = checkedByArea[area] || [];
 
