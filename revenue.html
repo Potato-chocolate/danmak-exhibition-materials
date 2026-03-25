@@ -951,17 +951,14 @@
                 <h2>매장 정보 입력</h2>
 
                 <div class="form-group">
-                    <label for="region_type">지역 구분</label>
-                    <select id="region_type" onchange="updateLocationOptions()" inputmode="none">
-                        <option value="수도권" selected>수도권</option>
-                        <option value="지방권">지방권</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
                     <label for="location_area">상권 유형</label>
                     <select id="location_area" onchange="updateCalculation()" inputmode="none">
-                        <!-- 동적으로 채워짐 -->
+                        <option value="먹자골목">먹자골목</option>
+                        <option value="먹자+오피스">먹자+오피스</option>
+                        <option value="먹자+주거">먹자+주거</option>
+                        <option value="주거">주거</option>
+                        <option value="쇼핑">쇼핑</option>
+                        <option value="대학가">대학가</option>
                     </select>
                 </div>
 
@@ -999,14 +996,14 @@
                         <div class="icon">R</div>
                         <div>
                             <h4 id="info_turnover">기대 회전수: 3.0회</h4>
-                            <p id="info_turnover_desc">복합상권 기준 평균 회전수</p>
+                            <p id="info_turnover_desc">먹자골목 기준 평균 회전수</p>
                         </div>
                     </div>
                     <div class="info-card">
                         <div class="icon">P</div>
                         <div>
                             <h4 id="info_price">평균 조단가: 85,000원</h4>
-                            <p id="info_price_desc">수도권 복합상권 기준</p>
+                            <p id="info_price_desc">먹자골목 기준 조단가</p>
                         </div>
                     </div>
                 </div>
@@ -1118,7 +1115,7 @@
                                 <td id="pos_cost_percent">-</td>
                             </tr>
                             <tr>
-                                <td>캐치테이블</td>
+                                <td><label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" id="cb_catchTable" onchange="updateCalculation()"> 캐치테이블</label></td>
                                 <td id="catch_table_display">-</td>
                                 <td>-</td>
                             </tr>
@@ -1385,7 +1382,7 @@
                 <h3>상권별 회전수 및 조단가</h3>
                 <table class="ref-table">
                     <thead>
-                        <tr><th>상권</th><th>회전수</th><th>조단가 (수도권)</th></tr>
+                        <tr><th>상권</th><th>회전수</th><th>조단가</th></tr>
                     </thead>
                     <tbody id="ref_table_area_type">
                         <!-- 동적으로 채워짐 -->
@@ -1440,36 +1437,14 @@
          * 공식: (테이블오더기_대수 × 단가 + 메인포스) × 부가세율
          * 테이블오더기 대수 = 테이블 수 + 1 (카운터용)
          */
-        function getPosCost(area) {
-            // 엑셀 BEP 기준 직접 매핑이 있으면 사용
-            if (CONFIG.posCostByArea && CONFIG.posCostByArea[area]) {
-                return CONFIG.posCostByArea[area];
-            }
-            // 없으면 기존 공식으로 계산
-            const tables = CONFIG.tablesByArea[area];
-            return Math.round(((CONFIG.포스_테이블당 * (tables + 1)) + CONFIG.포스_메인) * CONFIG.포스_부가세율);
+        function getPosCost(tables) {
+            return ((tables + 1) * CONFIG.포스_테이블당) + CONFIG.포스_기본;
         }
 
         /**
-         * 상권 드롭다운 옵션 갱신 (지역 변경 시 호출)
+         * (레거시 호환용 — 지역 구분 제거로 실제 동작 없음)
          */
         function updateLocationOptions() {
-            const regionType = document.getElementById('region_type').value;
-            const locationSelect = document.getElementById('location_area');
-            const prevAreaType = locationSelect.value.split('-')[0]; // 이전 상권 타입 기억
-
-            locationSelect.innerHTML = '';
-            CONFIG.locationOptions[regionType].forEach(opt => {
-                const el = document.createElement('option');
-                el.value = opt.value;
-                el.textContent = opt.text;
-                locationSelect.appendChild(el);
-            });
-
-            // 동일 상권 타입으로 자동 선택 유지
-            const match = CONFIG.locationOptions[regionType].find(o => o.value.startsWith(prevAreaType + '-'));
-            locationSelect.value = match ? match.value : CONFIG.locationOptions[regionType][0].value;
-
             updateCalculation();
         }
 
@@ -1477,19 +1452,15 @@
          * 매출 계산 및 화면 갱신
          */
         function updateCalculation() {
-            const regionType   = document.getElementById('region_type').value;
             const locationArea = document.getElementById('location_area').value;
-            const areaType     = locationArea.split('-')[0]; // 상권 키
+            const areaType     = locationArea; // 상권 키 (value가 곧 키)
             const area         = parseInt(document.getElementById('area_size').value);
             const businessDays = parseInt(document.getElementById('business_days').value);
 
             const tableCount = CONFIG.tablesByArea[area];
             const areaData   = CONFIG.areaTypeData[areaType];
 
-            // 지방권 조단가 차감 적용
-            const adjustedPrice = regionType === '지방권'
-                ? areaData.price - CONFIG.지방권차감
-                : areaData.price;
+            const adjustedPrice = areaData.price;
 
             // 매출 = 테이블수 × 조단가 × 회전수 × 영업일수
             const monthlySales = tableCount * adjustedPrice * areaData.turnover * businessDays;
@@ -1505,17 +1476,15 @@
             document.getElementById('calc_days').textContent        = businessDays + '일';
 
             // 참고 카드 갱신
-            const regionLabel = regionType === '지방권' ? '지방권' : '수도권';
-            const areaTypeName = CONFIG.locationOptions[regionType].find(o => o.value === locationArea)?.text || areaType;
             document.getElementById('info_tables').textContent       = '테이블 수: ' + tableCount + '개';
             document.getElementById('info_tables_desc').textContent  = area + '평 기준 4인 테이블 배치';
             document.getElementById('info_turnover').textContent     = '기대 회전수: ' + areaData.turnover + '회';
-            document.getElementById('info_turnover_desc').textContent= areaTypeName + ' 기준 평균 회전수';
+            document.getElementById('info_turnover_desc').textContent= areaType + ' 기준 평균 회전수';
             document.getElementById('info_price').textContent        = '평균 조단가: ' + adjustedPrice.toLocaleString() + '원';
-            document.getElementById('info_price_desc').textContent   = regionLabel + ' ' + areaTypeName + ' 기준';
+            document.getElementById('info_price_desc').textContent   = areaType + ' 기준 조단가';
 
             // 참고 테이블 하이라이트 갱신
-            updateRefTableHighlights(area, areaType, regionType);
+            updateRefTableHighlights(area, areaType);
 
             // 인력 정보 갱신
             updateLaborInfo(area);
@@ -1540,33 +1509,25 @@
             // 상권별 회전수·조단가
             const typeTbody = document.getElementById('ref_table_area_type');
             typeTbody.innerHTML = '';
-            const labelMap = { '오피스': '오피스', '주거': '주거', '먹자': '먹자골목', '대학생': '대학가', '복합': '복합상권', '데이트': '데이트코스' };
             Object.entries(CONFIG.areaTypeData).forEach(([key, d]) => {
                 const tr = document.createElement('tr');
                 tr.dataset.areaType = key;
-                tr.innerHTML = `<td>${labelMap[key] || key}</td><td>${d.turnover}회</td><td class="price-cell">${d.price.toLocaleString()}원</td>`;
+                tr.innerHTML = `<td>${key}</td><td>${d.turnover}회</td><td class="price-cell">${d.price.toLocaleString()}원</td>`;
                 typeTbody.appendChild(tr);
             });
         }
 
-        function updateRefTableHighlights(area, areaType, regionType) {
-            const priceAdj = regionType === '지방권' ? -CONFIG.지방권차감 : 0;
-
+        function updateRefTableHighlights(area, areaType) {
             // 평수 하이라이트
             document.querySelectorAll('#ref_table_area tr').forEach(tr => {
                 const first = tr.cells[0]?.textContent;
                 tr.classList.toggle('highlight', first === area + '평');
             });
 
-            // 상권 하이라이트 + 조단가 갱신
+            // 상권 하이라이트
             document.querySelectorAll('#ref_table_area_type tr').forEach(tr => {
                 const key = tr.dataset.areaType;
                 tr.classList.toggle('highlight', key === areaType);
-                const priceCell = tr.querySelector('.price-cell');
-                if (priceCell && CONFIG.areaTypeData[key]) {
-                    const p = CONFIG.areaTypeData[key].price + priceAdj;
-                    priceCell.textContent = p.toLocaleString() + '원';
-                }
             });
         }
 
@@ -1590,10 +1551,12 @@
             const totalLabor  = staffSalary + insurance4 + ptSalary;
 
             // 포스 및 고정비
-            const posCost    = getPosCost(area);
-            const fc         = CONFIG.fixedCosts;
-            const otherFixed = posCost + fc.캐치테이블 + fc.보안 + fc.인터넷 + fc.보험 + fc.기장대행;
-            const totalFixed = monthlyRent + otherFixed;
+            const posCost       = getPosCost(tableCount);
+            const fc            = CONFIG.fixedCosts;
+            const catchTableOn  = document.getElementById('cb_catchTable').checked;
+            const catchTableAmt = catchTableOn ? fc.캐치테이블 : 0;
+            const otherFixed    = posCost + catchTableAmt + fc.보안 + fc.인터넷 + fc.보험 + fc.기장대행;
+            const totalFixed    = monthlyRent + otherFixed;
 
             // 비율 기반 변동비
             const cr = CONFIG.costRatios;
@@ -1636,7 +1599,7 @@
             document.getElementById('rent_percent').textContent       = pct(monthlyRent, monthlySales);
             document.getElementById('pos_cost_display').textContent   = fmt(posCost);
             document.getElementById('pos_cost_percent').textContent   = pct(posCost, monthlySales);
-            document.getElementById('catch_table_display').textContent= fmt(fc.캐치테이블);
+            document.getElementById('catch_table_display').textContent= fmt(catchTableAmt);
             document.getElementById('security_display').textContent   = fmt(fc.보안);
             document.getElementById('internet_display').textContent   = fmt(fc.인터넷);
             document.getElementById('insurance_display').textContent  = fmt(fc.보험);
@@ -1758,12 +1721,13 @@
         // =====================================================
         document.addEventListener('DOMContentLoaded', function () {
             buildRefTables();         // 참고 테이블 동적 생성
-            updateLocationOptions();  // 드롭다운 채우기
 
-            // 기본 상권: 복합상권으로 설정
+            // 기본 상권: 첫 번째 옵션(먹자골목)으로 설정
             const locationSelect = document.getElementById('location_area');
-            const defaultOption = Array.from(locationSelect.options).find(o => o.value.startsWith('복합-'));
-            if (defaultOption) locationSelect.value = defaultOption.value;
+            locationSelect.value = locationSelect.options[0].value;
+
+            // 캐치테이블 기본 체크 상태 적용
+            document.getElementById('cb_catchTable').checked = CONFIG.캐치테이블_기본선택;
 
             updateCalculation();      // 초기 계산
         });

@@ -842,11 +842,11 @@
                             </td>
                             <td>
                                 <div class="item-name">가맹비</div>
-                                <div class="item-desc">가맹비 면제</div>
+                                <div class="item-desc"><span style="color:var(--brand-primary); font-weight:700; font-size:0.95rem;">가맹비 면제</span></div>
                             </td>
                             <td class="price" id="price_가맹비">8,800,000원</td>
                             <td style="text-align:center">1</td>
-                            <td class="total-cell" id="total_가맹비" style="color:var(--text-light); text-decoration:line-through;">0원</td>
+                            <td class="total-cell" id="total_가맹비" style="color:var(--text-light); text-decoration:line-through; font-weight:700; font-size:1.05rem;">0원</td>
                         </tr>
                         <!-- 교육비: 디폴트 체크 -->
                         <tr>
@@ -1019,27 +1019,15 @@
                         </tr>
                         <tr>
                             <td>
-                                <div class="item-name">파티션 (원목)</div>
-                                <div class="item-desc">원목 제작</div>
+                                <div class="item-name">파티션</div>
+                                <div class="item-desc">가구재 제작</div>
                             </td>
                             <td></td>
-                            <td class="price">1,320,000원</td>
+                            <td class="price">270,000원</td>
                             <td style="text-align:center">
-                                <input type="number" inputmode="numeric" class="qty-input" id="partition_wood_qty" value="0" min="0" data-price="1320000" onchange="calculateRow(this)">
+                                <input type="number" inputmode="numeric" class="qty-input" id="partition_qty" value="0" min="0" data-price="270000" onchange="calculateRow(this)">
                             </td>
-                            <td class="total-cell" id="total_partition_wood" style="color:var(--text-light)">0원</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="item-name">파티션 (일반)</div>
-                                <div class="item-desc">일반 가구재 제작</div>
-                            </td>
-                            <td></td>
-                            <td class="price">715,000원</td>
-                            <td style="text-align:center">
-                                <input type="number" inputmode="numeric" class="qty-input" id="partition_std_qty" value="0" min="0" data-price="715000" onchange="calculateRow(this)">
-                            </td>
-                            <td class="total-cell" id="total_partition_std" style="color:var(--text-light)">0원</td>
+                            <td class="total-cell" id="total_partition" style="color:var(--text-light)">0원</td>
                         </tr>
                         <tr class="subtotal-row">
                             <td colspan="4" style="font-weight:700;">테이블 및 의자 합계</td>
@@ -1112,31 +1100,13 @@
                     </thead>
                     <tbody>
                         <!-- 화로 유형 선택 라디오 -->
-                        <tr>
-                            <td>
-                                <div class="item-name">화로 유형</div>
-                                <div class="item-desc">화로세트 단가 결정</div>
-                            </td>
-                            <td colspan="3" style="padding: 12px 16px;">
-                                <div class="radio-group">
-                                    <div class="radio-item">
-                                        <input type="radio" name="grill_type" id="grill_table" value="table" checked onchange="calculateGrillSelection()">
-                                        <label for="grill_table">테이블화로형 110,500원</label>
-                                    </div>
-                                    <div class="radio-item">
-                                        <input type="radio" name="grill_type" id="grill_electric" value="electric" onchange="calculateGrillSelection()">
-                                        <label for="grill_electric">착화식로스터 209,000원</label>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
                         <!-- 화로세트 합계 행 -->
                         <tr>
                             <td>
-                                <div class="item-name">화로세트 합계</div>
+                                <div class="item-name">화로세트 (테이블당)</div>
                                 <div class="item-desc">항아리 화로 + 물받이 링 + 숯통</div>
                             </td>
-                            <td class="price" id="grill_unit_price">110,500원</td>
+                            <td class="price" id="grill_unit_price">103,100원</td>
                             <td style="text-align:center">
                                 <input type="number" inputmode="numeric" class="qty-input" id="grill_qty" value="16" min="0" data-price="110500" onchange="calculateGrillQtyChange()">
                             </td>
@@ -1576,8 +1546,7 @@
             updateKitchenByArea(area);
 
             // 5. 화로세트 수량 (테이블 수)
-            const grillType = document.querySelector('input[name="grill_type"]:checked').value;
-            const grillPrice = grillType === 'table' ? CONFIG.화로세트_테이블형 : CONFIG.화로세트_착화식;
+            const grillPrice = CONFIG.화로세트_테이블형;
             document.getElementById('grill_qty').value = tables;
             document.getElementById('grill_qty').dataset.price = grillPrice;
             document.getElementById('grill_total').textContent = fmt(grillPrice * tables);
@@ -1591,8 +1560,8 @@
             document.getElementById('igniter_qty').value = igniterQty;
             document.getElementById('igniter_total').textContent = fmt(CONFIG.착화기 * igniterQty);
 
-            // 착화식로스터 선택 시 착화기 비활성
-            applyGrillTypeRules(grillType);
+            // 테이블화로형 고정: 착화기 활성 (평수별 수량)
+            applyGrillTypeRules('table');
 
             // 7-2. 직화기 수량: 테이블 수와 동일
             document.getElementById('direct_fire_qty').value = tables;
@@ -1698,8 +1667,7 @@
                 'chair_qty':          'total_chair',
                 'booth_seat_qty':     'total_booth',
                 'counter_qty':        'total_counter',
-                'partition_wood_qty': 'total_partition_wood',
-                'partition_std_qty':  'total_partition_std',
+                'partition_qty':      'total_partition',
                 'duct_qty':           'total_덕트',
                 'qty_에어컨40스탠드':  'total_에어컨40스탠드',
                 'qty_에어컨벽걸이':    'total_에어컨벽걸이',
@@ -1837,14 +1805,13 @@
         }
 
         function updateGrillByTableCount(totalTables) {
-            const grillType = document.querySelector('input[name="grill_type"]:checked').value;
-            const grillPrice = grillType === 'table' ? CONFIG.화로세트_테이블형 : CONFIG.화로세트_착화식;
+            const grillPrice = CONFIG.화로세트_테이블형;
             document.getElementById('grill_qty').value = totalTables;
             document.getElementById('grill_qty').dataset.price = grillPrice;
             document.getElementById('grill_total').textContent = fmt(grillPrice * totalTables);
-            // 불판: 테이블 × 3
-            document.getElementById('grill_plate_qty').value = totalTables * 3;
-            document.getElementById('total_plate').textContent = fmt(CONFIG.불판 * totalTables * 3);
+            // 불판: 테이블 × 불판배수
+            document.getElementById('grill_plate_qty').value = totalTables * CONFIG.불판배수;
+            document.getElementById('total_plate').textContent = fmt(CONFIG.불판 * totalTables * CONFIG.불판배수);
             // 직화기: 테이블 수와 동일
             document.getElementById('direct_fire_qty').value = totalTables;
             document.getElementById('total_direct_fire').textContent = fmt(CONFIG.직화기 * totalTables);
@@ -1854,7 +1821,7 @@
         function recalcFurnitureSubtotal() {
             const ids = [
                 'total_table4', 'total_table6', 'total_chair',
-                'total_booth', 'total_counter', 'total_partition_wood', 'total_partition_std'
+                'total_booth', 'total_counter', 'total_partition'
             ];
             let total = 0;
             ids.forEach(id => { total += parseAmount(document.getElementById(id).textContent); });
@@ -1866,16 +1833,15 @@
         // 화로 유형 라디오 변경
         // =============================================================
         function calculateGrillSelection() {
-            const grillType = document.querySelector('input[name="grill_type"]:checked').value;
             const tables = parseInt(document.getElementById('grill_qty').value) || 0;
-            applyGrillTypeRules(grillType, tables);
+            applyGrillTypeRules('table', tables);
             recalcGrillSubtotal();
             calculateGrandTotal();
         }
 
         function applyGrillTypeRules(grillType, tables) {
             const tableCount = tables !== undefined ? tables : (parseInt(document.getElementById('grill_qty').value) || 0);
-            const grillPrice = grillType === 'table' ? CONFIG.화로세트_테이블형 : CONFIG.화로세트_착화식;
+            const grillPrice = CONFIG.화로세트_테이블형;
 
             document.getElementById('grill_unit_price').textContent = fmt(grillPrice);
             document.getElementById('grill_qty').dataset.price = grillPrice;
@@ -1884,32 +1850,23 @@
             const area = parseInt(document.getElementById('store_area').value);
             const igniterEl = document.getElementById('igniter_qty');
 
-            if (grillType === 'electric') {
-                // 착화식로스터: 착화기 불필요
-                igniterEl.value = 0;
-                igniterEl.disabled = true;
-                document.getElementById('igniter_total').textContent = fmt(0);
-                document.getElementById('igniter_total').style.color = 'var(--text-light)';
-            } else {
-                // 테이블화로형: 착화기 필요 (평수별 수량)
-                const igniterQty = area <= CONFIG.착화기_경계평수 ? 1 : 2;
-                igniterEl.disabled = false;
-                igniterEl.value = igniterQty;
-                const igniterTotal = CONFIG.착화기 * igniterQty;
-                document.getElementById('igniter_total').textContent = fmt(igniterTotal);
-                document.getElementById('igniter_total').style.color = '';
-            }
+            // 테이블화로형 고정: 착화기 필요 (평수별 수량)
+            const igniterQty = area <= CONFIG.착화기_경계평수 ? 1 : 2;
+            igniterEl.disabled = false;
+            igniterEl.value = igniterQty;
+            const igniterTotal = CONFIG.착화기 * igniterQty;
+            document.getElementById('igniter_total').textContent = fmt(igniterTotal);
+            document.getElementById('igniter_total').style.color = '';
         }
 
         // 화로 수량 직접 변경 시
         function calculateGrillQtyChange() {
-            const grillType = document.querySelector('input[name="grill_type"]:checked').value;
-            const grillPrice = grillType === 'table' ? CONFIG.화로세트_테이블형 : CONFIG.화로세트_착화식;
+            const grillPrice = CONFIG.화로세트_테이블형;
             const qty = parseInt(document.getElementById('grill_qty').value) || 0;
             document.getElementById('grill_total').textContent = fmt(grillPrice * qty);
             // 불판도 연동
-            document.getElementById('grill_plate_qty').value = qty * 3;
-            document.getElementById('total_plate').textContent = fmt(CONFIG.불판 * qty * 3);
+            document.getElementById('grill_plate_qty').value = qty * CONFIG.불판배수;
+            document.getElementById('total_plate').textContent = fmt(CONFIG.불판 * qty * CONFIG.불판배수);
             // 직화기도 연동
             document.getElementById('direct_fire_qty').value = qty;
             document.getElementById('total_direct_fire').textContent = fmt(CONFIG.직화기 * qty);
@@ -2216,8 +2173,7 @@
                 'chair_qty':            CONFIG.의자,
                 'booth_seat_qty':       CONFIG.붙박이석,
                 'counter_qty':          CONFIG.카운터가구,
-                'partition_wood_qty':   CONFIG.파티션원목,
-                'partition_std_qty':    CONFIG.파티션일반,
+                'partition_qty':         CONFIG.파티션,
                 'direct_fire_qty':      CONFIG.직화기,
                 'duct_qty':             CONFIG.덕트,
                 'qty_철거':             CONFIG.철거,
