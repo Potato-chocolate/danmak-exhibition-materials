@@ -2037,23 +2037,27 @@
             });
 
             // 평수 연동 수량 초기화
+            const ductCb = document.getElementById('cb_덕트');
             const ductQtyEl = document.getElementById('duct_qty');
             ductQtyEl.value = area;
-            document.getElementById('total_덕트').textContent = fmt(CONFIG.덕트 * area);
-            document.getElementById('total_덕트').style.color = '';
+            ductQtyEl.disabled = !ductCb.checked;
+            document.getElementById('total_덕트').textContent = ductCb.checked ? fmt(CONFIG.덕트 * area) : fmt(0);
+            document.getElementById('total_덕트').style.color = ductCb.checked ? '' : 'var(--text-light)';
 
             // 에어컨 기본값 초기화
+            const ac40Cb = document.getElementById('cb_에어컨40스탠드');
             const ac40El = document.getElementById('qty_에어컨40스탠드');
-            ac40El.disabled = false;
+            ac40El.disabled = !ac40Cb.checked;
             ac40El.value = 2;
-            document.getElementById('total_에어컨40스탠드').textContent = fmt(CONFIG.에어컨_40평스탠드 * 2);
-            document.getElementById('total_에어컨40스탠드').style.color = '';
+            document.getElementById('total_에어컨40스탠드').textContent = ac40Cb.checked ? fmt(CONFIG.에어컨_40평스탠드 * 2) : fmt(0);
+            document.getElementById('total_에어컨40스탠드').style.color = ac40Cb.checked ? '' : 'var(--text-light)';
 
+            const acWallCb = document.getElementById('cb_에어컨벽걸이');
             const acWallEl = document.getElementById('qty_에어컨벽걸이');
-            acWallEl.disabled = false;
+            acWallEl.disabled = !acWallCb.checked;
             acWallEl.value = 1;
-            document.getElementById('total_에어컨벽걸이').textContent = fmt(CONFIG.에어컨_벽걸이6평 * 1);
-            document.getElementById('total_에어컨벽걸이').style.color = '';
+            document.getElementById('total_에어컨벽걸이').textContent = acWallCb.checked ? fmt(CONFIG.에어컨_벽걸이6평 * 1) : fmt(0);
+            document.getElementById('total_에어컨벽걸이').style.color = acWallCb.checked ? '' : 'var(--text-light)';
 
             // 고정 항목 금액 적용
             const fixedDefaults = {
